@@ -41,9 +41,27 @@ var GameSceneLayer = function () {
                     tileView.setScale(0.7);
                     tileView.setPositionX(xOffset+blockSizeHalf);
                     tileView.setPositionY(yOffset+blockSizeHalf);
-                    //tileView.setPositionX(100);
-                    //tileView.setPositionY(100);
+
                     this.tileLayer.addChild(tileView);
+
+                    var touchListener = function (tileView) {
+                        return cc.EventListener.create({
+                            event:cc.EventListener.TOUCH_ONE_BY_ONE,
+                            swallowTouches:true,
+                            onTouchBegan: function (touch, event) {
+                                var position = touch.getLocation();
+                                var boundingBox = tileView.getBoundingBox();
+                                if(cc.rectContainsPoint(boundingBox,position)) {
+                                    console.log("1");
+                                    tileView.runAction(cc.sequence(new cc.ScaleTo(0.6, 0.2, 0.2), new cc.ScaleTo(0.6, 1, 1)));
+                                    return true;
+                                }
+                                return false;
+                            }
+                        });
+                    }(tileView);
+
+                    cc.eventManager.addListener(touchListener, tileView);
 
                     xOffset += blockSize;
                 }
