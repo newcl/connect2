@@ -77,7 +77,15 @@ var PathCache = function () {
                 pathKeys[key2] = 1;
             }
 
-            assert(pathKeys.length%2==0, "");
+            assert(Object.keys(pathKeys).length%2==0, "");
+        },
+        getPath: function (p1, p2) {
+            var key = positionToKey(p1,p2);
+            if(key in pathMap) {
+                return pathMap[key][0];
+            } else {
+                return null;
+            }
         }
     });
 }();
@@ -105,8 +113,8 @@ var Game = function () {
             this.reset();
         },
         isXLinked: function (x1, x2, y) {
-            var minX = min(x1, x2);
-            var maxX = max(x1, x2);
+            var minX = Math.min(x1, x2);
+            var maxX = Math.max(x1, x2);
 
             for (var i=minX + 1; i < maxX; i++) {
                 if (!this.isPositionAvailable(i, y)) {
@@ -117,8 +125,8 @@ var Game = function () {
             return true;
         },
         isYLinked: function (y1, y2, x) {
-            var minY = min(y1, y2);
-            var maxY = max(y1, y2);
+            var minY = Math.min(y1, y2);
+            var maxY = Math.max(y1, y2);
 
             for (var i=minY + 1; i < maxY; i++) {
                 if (!this.isPositionAvailable(x, i)) {
@@ -265,21 +273,42 @@ var Game = function () {
         },
 
         //public begin
-        getRowCount: function () {
-
-        },
-        getColumnCount: function () {
-
-        },
         canConnect: function (p1, p2) {
-
-            return false;
+            return this.getPath(p1,p2) != null;
         },
         connect: function (p1, p2) {
+            var key1 = positionToKey(p1.x, p1.y);
+            var key2 = positionToKey(p2.x, p2.y);
 
+            var gameTile1 = this.positionMap[key1];
+            var gameTile2 = this.positionMap[key2];
+
+            assert(gameTile1.key === gameTile2.key, "WTF");
+
+
+            var gameTileGroup = this.gameTileGroup[gameTile1.key];
+            var oldGroupCount = gameTileGroup.length;
+            gameTileGroup.splice(gameTileGroup.indexOf(gameTile1), 1);
+            gameTileGroup.splice(gameTileGroup.indexOf(gameTile2), 1);
+            assert(oldGroupCount-2===gameTileGroup.length, "WTF");
+            
+
+            var gameTiles = this.gameTiles;
+            var oldGameTileCount = gameTiles.length;
+            gameTiles.splice(gameTiles.indexOf(gameTile1), 1);
+            gameTiles.splice(gameTiles.indexOf(gameTile2), 1);
+            assert(oldGameTileCount-2 === gameTiles.length, "WTF");
+
+
+            var oldPositionCount = Object.keys(this.positionMap).length;
+            delete this.positionMap[key1];
+            delete this.positionMap[key2];
+            assert(oldPositionCount-2 === Object.keys(this.positionMap).length, "WTF");
+
+            this.updateAllPath();
         },
-        getPath: function (x1, y1, x2, y2) {
-
+        getPath: function (p1, p2) {
+            return this.pathCache.getPath(p1,p2) != null;
         },
         getRandomPath: function () {
 

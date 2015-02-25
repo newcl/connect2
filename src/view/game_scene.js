@@ -66,6 +66,12 @@ var GameSceneLayer = function () {
                     if(selectedGameTileView.gameTile.key == newSelected.gameTile.key) {
                         if(this.game.canConnect(selectedGameTileView.gameTile.position, newSelected.gameTile.position)) {
                             //mega coin splash
+                            this.game.connect(selectedGameTileView.gameTile.position, newSelected.gameTile.position);
+
+                            selectedGameTileView.removeFromParent();
+                            newSelected.removeFromParent();
+
+                            selectedGameTileView = null;
                         } else {
                             //nooooooooooooo
                             this.stopTintSelectedGameTileView(selectedGameTileView);
