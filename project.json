@@ -2,7 +2,7 @@
     "project_type": "javascript",
 
     "debugMode" : 1,
-    "showFPS" : true,
+    "showFPS" : false,
     "frameRate" : 60,
     "id" : "gameCanvas",
     "renderMode" : 0,
@@ -11,12 +11,11 @@
     "modules" : ["cocos2d"],
 
     "jsList" : [
+        "src/assert.js",
         "src/resource.js",
         "src/model/game_tile.js",
         "src/model/game.js",
         "src/view/game_scene.js",
         "src/view/game_tile_view.js"
-
-
     ]
 }

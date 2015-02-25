@@ -4,21 +4,13 @@
 
 var GameTile = cc.Class.extend({
     key:null,
-    position: cc.p(0, 0),
-    ctor : function(x,y,key){
-        this._super();
-        this.setKey(key);
-        this.setX(x);
-        this.setY(y);
-    },
-    setKey : function(key){
+    position: null,
+    ctor : function(position, key){
         this.key = key;
+        this.position = position;
     },
-    setX:function (x){
-        this.position.x = x;
-    },
-    setY:function (y){
-        this.position.y = y;
+    setPosition: function (position) {
+        this.position = position;
     }
 });
 
