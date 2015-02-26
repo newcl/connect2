@@ -2,6 +2,8 @@
  * Created by chenliang on 15/2/20.
  */
 
+var rowCount = 8;
+var columnCount = 5;
 
 function positionToKey (x, y) {
     return x + "-" + y;
@@ -99,14 +101,12 @@ var Game = function () {
         shuffleCount: 3,
         positionMap: {},
         iconNames:[],
-        rowCount:8,
-        columnCount:5,
         gameTileGroup:{},
         pathCache:null,
         ctor:function() {
-            this.init();
+            this.initGame();
         },
-        init: function () {
+        initGame: function () {
             iconConfig = new IconConfig();
             iconConfig.init();
             this.pathCache = new PathCache();
@@ -181,11 +181,10 @@ var Game = function () {
         },
         getRandomPosition: function () {
             while (true) {
-                var row = (Math.random()*this.rowCount) << 0;
-                var col = (Math.random()*this.columnCount) << 0;
+                var row = (Math.random()*rowCount) << 0;
+                var col = (Math.random()*columnCount) << 0;
 
                 if(this.isPositionAvailable(col, row)) {
-                    console.log(col + "-" + row + "->" + "("+this.rowCount+",)"+this.columnCount);
                     return cc.p(col, row);
                 }
             }
@@ -246,7 +245,7 @@ var Game = function () {
             }
 
 
-            for (var y=-1; y <= this.rowCount; y++) {
+            for (var y=-1; y <= rowCount; y++) {
                 if (y == y1 || y == y2) {
                     continue;
                 }
@@ -273,6 +272,9 @@ var Game = function () {
         },
 
         //public begin
+        isEmpty: function () {
+            return this.gameTiles.length <= 0;
+        },
         canConnect: function (p1, p2) {
             return this.getPath(p1,p2) != null;
         },
@@ -320,7 +322,6 @@ var Game = function () {
 
         },
         reset: function () {
-            this.positionMap = {};
             var iconName = iconConfig.getIconNames()[ (iconConfig.getIconTypeCount()*Math.random)<<0];
 
             var pair = 5;

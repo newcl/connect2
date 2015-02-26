@@ -58,6 +58,27 @@ var GameSceneLayer = function () {
             gameTileView.stopActionByTag(TAG_TINT_FOR_SELECTION);
             gameTileView.setColor(cc.color(0xff,0xff,0xff,0xff));
         },
+        reset: function () {
+            this.game = new Game();
+            this.createGameTileViews(this.game);
+        },
+        cleanupForGameTileView: function (gameTileView) {
+            gameTileView.removeFromParent();
+            cc.eventManager.removeListener(gameTileView);
+        },
+        onConnected: function (newSelected) {
+            //mega coin splash
+            this.game.connect(selectedGameTileView.gameTile.position, newSelected.gameTile.position);
+
+            this.cleanupForGameTileView(selectedGameTileView);
+            this.cleanupForGameTileView(newSelected);
+
+            selectedGameTileView = null;
+
+            if(this.game.isEmpty()) {
+                this.reset();
+            }
+        },
         onGameTileViewSelected: function (newSelected) {
             if(selectedGameTileView){
                 if(selectedGameTileView === newSelected) {
@@ -65,13 +86,7 @@ var GameSceneLayer = function () {
                 } else {
                     if(selectedGameTileView.gameTile.key == newSelected.gameTile.key) {
                         if(this.game.canConnect(selectedGameTileView.gameTile.position, newSelected.gameTile.position)) {
-                            //mega coin splash
-                            this.game.connect(selectedGameTileView.gameTile.position, newSelected.gameTile.position);
-
-                            selectedGameTileView.removeFromParent();
-                            newSelected.removeFromParent();
-
-                            selectedGameTileView = null;
+                            this.onConnected(newSelected);
                         } else {
                             //nooooooooooooo
                             this.stopTintSelectedGameTileView(selectedGameTileView);
@@ -92,97 +107,49 @@ var GameSceneLayer = function () {
                 selectedGameTileView = newSelected;
                 this.tryTintSelectedGameTileView(selectedGameTileView);
             }
+        },
+        createGameTileView: function (gameTile) {
+            var position = this.getPositionInGame(gameTile.position);
+            var gameTileView = new GameTileView(gameTile, position, cc.size(blockSize, blockSize));
 
+            var touchListener = function (gameTileView, gameScene) {
+                return cc.EventListener.create({
+                    event: cc.EventListener.TOUCH_ONE_BY_ONE,
+                    swallowTouches: true,
+                    onTouchBegan: function (touch, event) {
+                        var position = touch.getLocation();
+                        var boundingBox = gameTileView.getBoundingBox();
+                        if (cc.rectContainsPoint(boundingBox, position)) {
+                            gameScene.onGameTileViewSelected(gameTileView);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }(gameTileView, this);
 
+            cc.eventManager.addListener(touchListener, gameTileView);
+
+            this.tileLayer.addChild(gameTileView);
+        },
+        createGameTileViews: function (game) {
+            game.gameTiles.forEach(function (gameTile) {
+                this.createGameTileView(gameTile);
+            }, this);
         },
         init: function () {
             this._super();
 
             var size = this.getContentSize();
-            this.horizontalInterval = (size.width - this.leftMargin - this.rightMargin - blockSize*this.game.columnCount) / (this.game.columnCount+1);
-            this.verticalInterval = (size.height - this.topMargin - this.bottomMargin - blockSize*this.game.rowCount) / (this.game.rowCount+1);
+            this.horizontalInterval = (size.width - this.leftMargin - this.rightMargin - blockSize*columnCount) / (columnCount+1);
+            this.verticalInterval = (size.height - this.topMargin - this.bottomMargin - blockSize*rowCount) / (rowCount+1);
 
             this.tileLayer = new cc.LayerColor(cc.color(0xff, 0xff,0xff,0xff));
             this.addChild(this.tileLayer);
 
-
-            this.game.gameTiles.forEach(function (gameTile) {
-                var position = this.getPositionInGame(gameTile.position);
-                var gameTileView = new GameTileView(gameTile, position, cc.size(blockSize, blockSize));
-
-                var touchListener = function (gameTileView, gameScene) {
-                    return cc.EventListener.create({
-                        event: cc.EventListener.TOUCH_ONE_BY_ONE,
-                        swallowTouches: true,
-                        onTouchBegan: function (touch, event) {
-                            var position = touch.getLocation();
-                            var boundingBox = gameTileView.getBoundingBox();
-                            if (cc.rectContainsPoint(boundingBox, position)) {
-                                gameScene.onGameTileViewSelected(gameTileView);
-                                return true;
-                            }
-                            return false;
-                        }
-                    });
-                }(gameTileView, this);
-
-                cc.eventManager.addListener(touchListener, gameTileView);
-
-                this.tileLayer.addChild(gameTileView);
-            }, this);
-            //var gameTile = this.game.gameTiles[0];
-            //var position = this.getPositionInGame(gameTile.position);
-            //position.x = 0;
-            //position.y = 0;
-            //var gameTileView = new GameTileView(gameTile, position, cc.size(blockSize, blockSize));
-            //gameTileView.setColor(cc.color((Math.random()*256).toFixed(),(Math.random()*256).toFixed(),(Math.random()*256).toFixed(),255));
-
-            //this.tileLayer.addChild(gameTileView);
-
-
-            //var p = new cc.Sprite("#mahjong-28.png");
-            //p.setPosition(cc.p(100, 100));
-            //this.tileLayer.addChild(p);
+            this.reset();
         },
         getPositionInGame: function (position) {
-            //var yOffset = this.bottomMargin;
-            //for(var row=0; row < this.game.rowCount;row ++) {
-            //    yOffset += this.verticalInterval;
-            //
-            //    var xOffset = this.leftMargin;
-            //    for(var column=0; column < this.game.columnCount; column++) {
-            //        xOffset += this.horizontalInterval;
-            //
-            //        var tileView = new cc.Sprite("#browsers-0.png");
-            //        tileView.setScale(0.7);
-            //        tileView.setPositionX(xOffset+blockSizeHalf);
-            //        tileView.setPositionY(yOffset+blockSizeHalf);
-            //
-            //        this.tileLayer.addChild(tileView);
-            //
-            //        var touchListener = function (tileView) {
-            //            return cc.EventListener.create({
-            //                event:cc.EventListener.TOUCH_ONE_BY_ONE,
-            //                swallowTouches:true,
-            //                onTouchBegan: function (touch, event) {
-            //                    var position = touch.getLocation();
-            //                    var boundingBox = tileView.getBoundingBox();
-            //                    if(cc.rectContainsPoint(boundingBox,position)) {
-            //                        tileView.runAction(cc.sequence(new cc.ScaleTo(0.6, 0.2, 0.2), new cc.ScaleTo(0.6, 1, 1)));
-            //                        return true;
-            //                    }
-            //                    return false;
-            //                }
-            //            });
-            //        }(tileView);
-            //
-            //        cc.eventManager.addListener(touchListener, tileView);
-            //
-            //        xOffset += blockSize;
-            //    }
-            //    yOffset += blockSize;
-            //}
-
             return cc.p(this.leftMargin + position.x*(this.horizontalInterval+blockSize) + this.horizontalInterval, this.bottomMargin + position.y*(this.verticalInterval+blockSize) + this.verticalInterval);
         },
         ctor:function (game) {
@@ -190,10 +157,6 @@ var GameSceneLayer = function () {
             this.game = game;
 
             return true;
-        },
-        createGameTileViews: function () {
-            this.tileLayer.removeAllChildren();
-
         }
     });
 }();
@@ -202,8 +165,7 @@ var GameScene = function () {
     return cc.Scene.extend({
         onEnter:function () {
             this._super();
-            var game = new Game();
-            var layer = new GameSceneLayer(game);
+            var layer = new GameSceneLayer();
             layer.init();
             layer.setColor(new cc.Color(0xff,0xff,0xff,0xff));
 
