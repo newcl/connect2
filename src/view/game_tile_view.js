@@ -8,7 +8,7 @@ var GameTileView = function () {
         position:null,
         sprite:null,
         ctor: function (gameTile, position, size) {
-            this._super(new cc.Color(0xff, 0xff,0xff,0xff), size.width, size.height);
+            this._super(new cc.Color(0xff, 0xff,0xff,0), size.width, size.height);
             this.gameTile = gameTile;
             this.position = position;
             this.setPosition(position);

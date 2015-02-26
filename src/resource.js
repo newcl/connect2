@@ -1,7 +1,8 @@
 var res = {
     all_icons : "res/icons/allicons.plist",
     //all_icons_texture : "res/icons/allicons.pvr.ccz",
-    all_icons_config : "res/icons/icons.plist"
+    all_icons_config : "res/icons/icons.plist",
+    background:"res/effects/background.plist"
 };
 
 var g_resources = [];

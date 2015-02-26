@@ -137,7 +137,7 @@ var GameSceneLayer = function () {
                 this.createGameTileView(gameTile);
             }, this);
         },
-        init: function () {
+        initScene: function () {
             this._super();
 
             var size = this.getContentSize();
@@ -145,7 +145,14 @@ var GameSceneLayer = function () {
             this.horizontalInterval = (size.width - this.leftMargin - this.rightMargin - blockSize*columnCount) / (columnCount+1);
             this.verticalInterval = (size.height - this.topMargin - this.bottomMargin - blockSize*rowCount) / (rowCount+1);
 
-            this.tileLayer = new cc.LayerColor(cc.color(0xff, 0xff,0xff,0xff));
+
+
+            this.backgroundLayer = new cc.LayerColor();
+            var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
+            this.backgroundLayer.addChild(particleBackground);
+            this.addChild(this.backgroundLayer);
+
+            this.tileLayer = new cc.LayerColor(cc.color(0xff, 0xff,0xff,0));
             this.addChild(this.tileLayer);
 
             this.reset();
@@ -156,7 +163,7 @@ var GameSceneLayer = function () {
         ctor:function (game) {
             this._super();
             this.game = game;
-
+            this.initScene();
             return true;
         }
     });
