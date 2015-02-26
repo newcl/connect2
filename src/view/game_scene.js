@@ -48,15 +48,15 @@ var GameSceneLayer = function () {
             gameTileView.runAction(sequence);
         },
         tryTintSelectedGameTileView: function (gameTileView) {
-            if(!gameTileView.getActionByTag(TAG_TINT_FOR_SELECTION)) {
+            if(!gameTileView.sprite.getActionByTag(TAG_TINT_FOR_SELECTION)) {
                 var action = cc.RepeatForever.create(cc.sequence(new cc.TintTo(0.4,50,50,50), new cc.TintTo(0.4, 170,170,170)));
                 action.setTag(TAG_TINT_FOR_SELECTION);
-                gameTileView.runAction(action);
+                gameTileView.sprite.runAction(action);
             }
         },
         stopTintSelectedGameTileView: function (gameTileView) {
-            gameTileView.stopActionByTag(TAG_TINT_FOR_SELECTION);
-            gameTileView.setColor(cc.color(0xff,0xff,0xff,0xff));
+            gameTileView.sprite.stopActionByTag(TAG_TINT_FOR_SELECTION);
+            gameTileView.sprite.setColor(cc.color(0xff,0xff,0xff,0xff));
         },
         reset: function () {
             this.game = new Game();
@@ -149,7 +149,7 @@ var GameSceneLayer = function () {
 
             this.backgroundLayer = new cc.LayerColor();
             var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
-            this.backgroundLayer.addChild(particleBackground);
+            //this.backgroundLayer.addChild(particleBackground);
             this.addChild(this.backgroundLayer);
 
             this.tileLayer = new cc.LayerColor(cc.color(0xff, 0xff,0xff,0));

@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="38d46ab1-3865-4d01-b73d-35dcc38c17eb" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/view/game_scene.js" afterPath="$PROJECT_DIR$/src/view/game_scene.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/view/game_tile_view.js" afterPath="$PROJECT_DIR$/src/view/game_tile_view.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/resource.js" afterPath="$PROJECT_DIR$/src/resource.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="connect2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="game_scene.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="game_scene.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/view/game_scene.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1813" max-vertical-offset="2805">
-              <caret line="154" column="73" selection-start-line="154" selection-start-column="73" selection-end-line="154" selection-end-column="73" />
+            <state vertical-scroll-proportion="0.43603852" vertical-offset="448" max-vertical-offset="2805">
+              <caret line="53" column="54" selection-start-line="53" selection-start-column="54" selection-end-line="53" selection-end-column="54" />
               <folding>
                 <element signature="e#0#43#0" expanded="false" />
               </folding>
@@ -41,10 +38,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="game_tile_view.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="game_tile_view.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/view/game_tile_view.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.20632738" vertical-offset="0" max-vertical-offset="727">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="435">
               <caret line="10" column="54" selection-start-line="10" selection-start-column="54" selection-end-line="10" selection-end-column="54" />
               <folding />
             </state>
@@ -157,8 +154,8 @@
         <option value="$PROJECT_DIR$/src/model/game.js" />
         <option value="$PROJECT_DIR$/src/resource.js" />
         <option value="$PROJECT_DIR$/main.js" />
-        <option value="$PROJECT_DIR$/src/view/game_scene.js" />
         <option value="$PROJECT_DIR$/src/view/game_tile_view.js" />
+        <option value="$PROJECT_DIR$/src/view/game_scene.js" />
       </list>
     </option>
   </component>
@@ -773,21 +770,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/game_scene.js">
+    <entry file="file://$PROJECT_DIR$/src/view/game_tile_view.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1813" max-vertical-offset="2805">
-          <caret line="154" column="73" selection-start-line="154" selection-start-column="73" selection-end-line="154" selection-end-column="73" />
-          <folding>
-            <element signature="e#0#43#0" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="435">
+          <caret line="10" column="54" selection-start-line="10" selection-start-column="54" selection-end-line="10" selection-end-column="54" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/game_tile_view.js">
+    <entry file="file://$PROJECT_DIR$/src/view/game_scene.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20632738" vertical-offset="0" max-vertical-offset="727">
-          <caret line="10" column="54" selection-start-line="10" selection-start-column="54" selection-end-line="10" selection-end-column="54" />
-          <folding />
+        <state vertical-scroll-proportion="0.43603852" vertical-offset="448" max-vertical-offset="2805">
+          <caret line="53" column="54" selection-start-line="53" selection-start-column="54" selection-end-line="53" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#43#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
