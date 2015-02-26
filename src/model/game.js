@@ -318,9 +318,6 @@ var Game = function () {
         getHintPath: function () {
 
         },
-        isEmpty:function(){
-
-        },
         reset: function () {
             var iconName = iconConfig.getIconNames()[ (iconConfig.getIconTypeCount()*Math.random)<<0];
 

@@ -141,6 +141,7 @@ var GameSceneLayer = function () {
             this._super();
 
             var size = this.getContentSize();
+            //alert(size.width+"-"+size.height);
             this.horizontalInterval = (size.width - this.leftMargin - this.rightMargin - blockSize*columnCount) / (columnCount+1);
             this.verticalInterval = (size.height - this.topMargin - this.bottomMargin - blockSize*rowCount) / (rowCount+1);
 
