@@ -149,7 +149,7 @@ var GameSceneLayer = function () {
 
             this.backgroundLayer = new cc.LayerColor();
             var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
-            //this.backgroundLayer.addChild(particleBackground);
+            this.backgroundLayer.addChild(particleBackground);
             this.addChild(this.backgroundLayer);
 
             this.tileLayer = new cc.LayerColor(cc.color(0xff, 0xff,0xff,0));
