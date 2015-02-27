@@ -31,13 +31,44 @@ var IconConfig = function () {
 }();
 
 var Path = function () {
-    var elements = [];
+    
     return cc.Class.extend({
         join: function (p) {
-            elements.push(p);
+            this.elements.push(p);
             return this;
         },
-        cost:0
+        cost:0,
+        elements:null,
+        ctor:function  () {
+            this.elements = [];
+        },
+        finish: function  () {
+            var elements = this.elements;
+            assert(elements.length > 0, "probably logic error");
+            for (var i = 0; i < elements.length -1; i++) {
+                var x1 = elements[i].x;
+                var y1 = elements[i].y;
+
+                var x2 = elements[i+1].x;
+                var y2 = elements[i+1].y;
+
+
+                var deltaX = x2-x1;
+                var deltaY = y2-y1;
+                this.cost += deltaX*deltaX+deltaY*deltaY;
+
+                return this;
+            };
+        },
+        reverse:function () {
+            var path = new Path();
+            path.elements = this.elements.reverse();
+            path.finish();
+            return path;
+        },
+        head:function () {
+            return this.elements[0];
+        }
 
     });
 }();
@@ -49,6 +80,14 @@ var PathCache = function () {
     }
 
     function comparePathCost(p1, p2){
+        var length1 = p1.elements.length;
+        var length2 = p2.elements.length;
+        if (length1 < length2) {
+            return -1;
+        } else if(length1 > length2) {
+            return 1;
+        }
+
         return p1.cost - p2.cost;
     }
     var pathMap = {};
@@ -201,7 +240,7 @@ var Game = function () {
             //one line link
             if (x1 == x2) {
                 if (this.isYLinked(y1, y2, x1)) {
-                    var path = new Path().join(p1).join(p2);
+                    var path = new Path().join(p1).join(p2).finish();
                     this.pathCache.addPath(p1, p2, path);
                     return;
                 }
@@ -209,7 +248,7 @@ var Game = function () {
 
             if (y1 == y2) {
                 if (this.isXLinked(x1, x2, y1)) {
-                    var path = new Path().join(p1).join(p2);
+                    var path = new Path().join(p1).join(p2).finish();
                     this.pathCache.addPath(p1, p2, path);
                     return;
                 }
@@ -217,13 +256,13 @@ var Game = function () {
 
             //2 line link
             if (this.isXLinked2(x1, y1, x2) && this.isYLinked2(x2, y2, y1)) {
-                var path = new Path().join(p1).join(cc.p(x2, y1)).join(p2);
+                var path = new Path().join(p1).join(cc.p(x2, y1)).join(p2).finish();
                 this.pathCache.addPath(p1, p2, path);
                 return;
             }
 
             if (this.isYLinked2(x1, y1, y2) && this.isXLinked2(x2, y2, x1)) {
-                var path = new Path().join(p1).join(cc.p(x1, y2)).join(p2);
+                var path = new Path().join(p1).join(cc.p(x1, y2)).join(p2).finish();
                 this.pathCache.addPath(p1, p2, path);
                 return;
             }
@@ -233,13 +272,13 @@ var Game = function () {
             var minY = Math.min(y1, y2);
             var maxY = Math.max(y1, y2);
 
-            for (var x=-1; x <= this.columnCount; x++) {
+            for (var x=-1; x <= columnCount; x++) {
                 if (x == x1 || x == x2) {
                     continue;
                 }
 
                 if (this.isXLinked2(x1, y1, x) && this.isYLinked(minY-1, maxY+1, x) && this.isXLinked2(x2, y2, x)) {
-                    var path = new Path().join(p1).join(cc.p(x, y1)).join(cc.p(x, y2)).join(p2);
+                    var path = new Path().join(p1).join(cc.p(x, y1)).join(cc.p(x, y2)).join(p2).finish();
                     this.pathCache.addPath(p1, p2, path);
                 }
             }
@@ -251,7 +290,7 @@ var Game = function () {
                 }
 
                 if (this.isYLinked2(x1, y1, y) && this.isXLinked(minX-1, maxX+1, y) && this.isYLinked2(x2, y2, y)) {
-                    var path = new Path().join(p1).join(cc.p(x1, y)).join(cc.p(x2, y)).join(p2);
+                    var path = new Path().join(p1).join(cc.p(x1, y)).join(cc.p(x2, y)).join(p2).finish();
                     this.pathCache.addPath(p1, p2, path);
                 }
             }
@@ -307,7 +346,11 @@ var Game = function () {
             delete this.positionMap[key2];
             assert(oldPositionCount-2 === Object.keys(this.positionMap).length, "WTF");
 
+            var path = this.pathCache.getPath(p1, p2);
+
             this.updateAllPath();
+
+            return path;
         },
         getPath: function (p1, p2) {
             return this.pathCache.getPath(p1,p2) != null;
@@ -319,7 +362,7 @@ var Game = function () {
 
         },
         reset: function () {
-            var iconName = iconConfig.getIconNames()[ (iconConfig.getIconTypeCount()*Math.random)<<0];
+            var iconName = iconConfig.getIconNames()[ (iconConfig.getIconTypeCount()*Math.random())<<0];
 
             var pair = 5;
             var typeCount = Math.min(5, iconConfig.getConfig()[iconName]);

@@ -63,15 +63,47 @@ var GameSceneLayer = function () {
             this.createGameTileViews(this.game);
         },
         cleanupForGameTileView: function (gameTileView) {
-            gameTileView.removeFromParent();
-            cc.eventManager.removeListener(gameTileView);
+            //gameTileView.removeFromParent();
+            cc.eventManager.removeListener(gameTileView.listener);
+            delete gameTileView.listener;
+        },
+        moveGameTileViewAlongPath:function (gameTileView, path, target) {
+            if (this.game.isEmpty()) {
+                gameTileView.removeFromParent();
+                target.removeFromParent();
+            } else {
+                var startPosition = gameTileView.gameTile.position;
+                if (startPosition.x === path.head().x && startPosition.y === path.head().y) {
+
+                } else {
+                    path = path.reverse();
+                    assert(startPosition.x === path.head().x && startPosition.y === path.head().y, "WTF");
+                }
+
+                var actions = [];
+
+                for (var i = 1; i < path.elements.length; i++) {
+                    actions.push(cc.moveTo(0.1, this.getPositionInGame(path.elements[i])));
+                };
+
+                var onFinish = cc.callFunc(function () {
+                    gameTileView.removeFromParent();
+                    target.removeFromParent();
+                });
+                actions.push(onFinish);
+                var sequence = cc.sequence(actions);
+                gameTileView.runAction(sequence);    
+            }
+            
         },
         onConnected: function (newSelected) {
             //mega coin splash
-            this.game.connect(selectedGameTileView.gameTile.position, newSelected.gameTile.position);
+            var path = this.game.connect(selectedGameTileView.gameTile.position, newSelected.gameTile.position);
 
             this.cleanupForGameTileView(selectedGameTileView);
             this.cleanupForGameTileView(newSelected);
+
+            this.moveGameTileViewAlongPath(selectedGameTileView, path, newSelected);
 
             selectedGameTileView = null;
 
@@ -128,7 +160,7 @@ var GameSceneLayer = function () {
                 });
             }(gameTileView, this);
 
-            cc.eventManager.addListener(touchListener, gameTileView);
+            gameTileView.listener = cc.eventManager.addListener(touchListener, gameTileView);
 
             this.tileLayer.addChild(gameTileView);
         },
@@ -144,8 +176,6 @@ var GameSceneLayer = function () {
             //alert(size.width+"-"+size.height);
             this.horizontalInterval = (size.width - this.leftMargin - this.rightMargin - blockSize*columnCount) / (columnCount+1);
             this.verticalInterval = (size.height - this.topMargin - this.bottomMargin - blockSize*rowCount) / (rowCount+1);
-
-
 
             this.backgroundLayer = new cc.LayerColor();
             var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
