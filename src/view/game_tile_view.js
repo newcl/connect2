@@ -3,12 +3,12 @@
  */
 
 var GameTileView = function () {
-    return cc.LayerColor.extend({
+    return cc.Layer.extend({
         gameTile:null,
         position:null,
         sprite:null,
         ctor: function (gameTile, position, size) {
-            this._super(new cc.Color(0xff, 0xff,0xff,0), size.width, size.height);
+            this._super(size.width, size.height);
             this.gameTile = gameTile;
             this.position = position;
             this.setPosition(position);

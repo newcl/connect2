@@ -196,7 +196,7 @@ var GameSceneLayer = function () {
             this.backgroundLayer.addChild(particleBackground);
             this.addChild(this.backgroundLayer);
 
-            this.tileLayer = new cc.LayerColor(cc.color(0xff, 0xff,0xff,0));
+            this.tileLayer = new cc.Layer();
             this.addChild(this.tileLayer);
 
             this.reset();
