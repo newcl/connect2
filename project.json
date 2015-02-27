@@ -12,6 +12,7 @@
 
     "jsList" : [
         "src/assert.js",
+        "src/all_icons.js",
         "src/resource.js",
         "src/model/game_tile.js",
         "src/model/game.js",

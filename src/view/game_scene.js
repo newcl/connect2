@@ -83,7 +83,8 @@ var GameSceneLayer = function () {
                 var actions = [];
 
                 for (var i = 1; i < path.elements.length; i++) {
-                    actions.push(cc.moveTo(0.1, this.getPositionInGame(path.elements[i])));
+                    var positon = this.getPositionInGameForSprite(path.elements[i]);
+                    actions.push(cc.moveTo(0.2, positon));
                 };
 
                 var onFinish = cc.callFunc(function () {
@@ -92,7 +93,13 @@ var GameSceneLayer = function () {
                 });
                 actions.push(onFinish);
                 var sequence = cc.sequence(actions);
-                gameTileView.runAction(sequence);    
+
+                gameTileView.setVisible(false);
+
+                var motionStreak = new cc.MotionStreak(0.3, 1.0, 50.0, cc.color(255, 255, 0), gameTileView.gameTile.key);
+                motionStreak.setPosition(this.getPositionInGameForSprite(gameTileView.gameTile.position));
+                this.tileLayer.addChild(motionStreak);
+                motionStreak.runAction(sequence);
             }
             
         },
@@ -179,7 +186,7 @@ var GameSceneLayer = function () {
 
             this.backgroundLayer = new cc.LayerColor();
             var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
-            this.backgroundLayer.addChild(particleBackground);
+            // this.backgroundLayer.addChild(particleBackground);
             this.addChild(this.backgroundLayer);
 
             this.tileLayer = new cc.LayerColor(cc.color(0xff, 0xff,0xff,0));
@@ -189,6 +196,12 @@ var GameSceneLayer = function () {
         },
         getPositionInGame: function (position) {
             return cc.p(this.leftMargin + position.x*(this.horizontalInterval+blockSize) + this.horizontalInterval, this.bottomMargin + position.y*(this.verticalInterval+blockSize) + this.verticalInterval);
+        },
+        getPositionInGameForSprite:function (position) {
+            var p = this.getPositionInGame(position);
+            p.x += blockSizeHalf;
+            p.y += blockSizeHalf;
+            return p;
         },
         ctor:function (game) {
             this._super();

@@ -53,7 +53,6 @@ cc.game.onStart = function(){
     cc.view.resizeWithBrowserSize(true);
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
-        cc.spriteFrameCache.addSpriteFrames("res/icons/allicons.plist", "res/icons/allicons.png");
         cc.director.runScene(new GameScene());
     }, this);
 };

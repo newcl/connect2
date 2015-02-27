@@ -171,6 +171,7 @@
             </sources>
             <sources dir="${basedir}">
                 <file name="src/assert.js"/>
+                <file name="src/all_icons.js"/>
                 <file name="src/resource.js"/>
                 <file name="src/model/game_tile.js"/>
                 <file name="src/model/game.js"/>

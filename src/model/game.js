@@ -68,6 +68,9 @@ var Path = function () {
         },
         head:function () {
             return this.elements[0];
+        },
+        tail:function () {
+            return this.elements[this.elements.length-1];
         }
 
     });
@@ -353,7 +356,7 @@ var Game = function () {
             return path;
         },
         getPath: function (p1, p2) {
-            return this.pathCache.getPath(p1,p2) != null;
+            return this.pathCache.getPath(p1,p2);
         },
         getRandomPath: function () {
 
@@ -364,14 +367,16 @@ var Game = function () {
         reset: function () {
             var iconName = iconConfig.getIconNames()[ (iconConfig.getIconTypeCount()*Math.random())<<0];
 
-            var pair = 5;
+            var pair = 10;
             var typeCount = Math.min(5, iconConfig.getConfig()[iconName]);
 
             for(var i=0; i < pair;i++) {
                 //"%s-%d.png"
-                var iconNameOffset = (Math.random()*typeCount) << 0;
-                var spriteFrameName = iconName + "-"+iconNameOffset+".png";
-                this.addGameTileForKey(spriteFrameName);
+                // var iconNameOffset = (Math.random()*typeCount) << 0;
+                // var spriteFrameName = iconName + "-"+iconNameOffset+".png";
+
+                var key = all_icons[(Math.random()*all_icons.length) << 0];
+                this.addGameTileForKey(key);
             }
 
             this.updateAllPath();
