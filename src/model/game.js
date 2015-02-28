@@ -2,8 +2,8 @@
  * Created by chenliang on 15/2/20.
  */
 
-var rowCount = 8;
-var columnCount = 5;
+var rowCount = 6;
+var columnCount = 4;
 
 function positionToKey (x, y) {
     return x + "-" + y;
@@ -14,11 +14,8 @@ var IconConfig = function () {
     var iconNames;
     return cc.Class.extend({
         init: function () {
-            config = cc.loader.getRes("res/icons/icons.plist");
+            config = JSON.parse(cc.loader.getRes("res/all_icons.json"));
             iconNames = Object.keys(config);
-        },
-        getIconTypeCount: function () {
-            return iconNames.length;
         },
         getConfig: function () {
             return config;
@@ -145,6 +142,7 @@ var Game = function () {
         iconNames:[],
         gameTileGroup:{},
         pathCache:null,
+        score:0,
         ctor:function() {
             this.initGame();
         },
@@ -365,17 +363,21 @@ var Game = function () {
 
         },
         reset: function () {
-            var iconName = iconConfig.getIconNames()[ (iconConfig.getIconTypeCount()*Math.random())<<0];
+            var iconNames = iconConfig.getIconNames();
+            var iconName = iconNames[(iconNames.length*Math.random())<<0];
 
-            var pair = 10;
-            var typeCount = Math.min(5, iconConfig.getConfig()[iconName]);
-
+            var pair = 6;
+            // var typeCount = Math.min(5, iconConfig.getConfig()[iconName]);
+            var count = iconConfig.getConfig()[iconName];
             for(var i=0; i < pair;i++) {
                 //"%s-%d.png"
                 // var iconNameOffset = (Math.random()*typeCount) << 0;
                 // var spriteFrameName = iconName + "-"+iconNameOffset+".png";
 
-                var key = all_icons[(Math.random()*all_icons.length) << 0];
+                // var key = all_icons[(Math.random()*all_icons.length) << 0];
+                var index = (Math.random()*count) << 0;
+
+                var key = "res/icons/"+iconName+"/"+iconName+"-"+index+".png";
                 this.addGameTileForKey(key);
             }
 

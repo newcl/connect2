@@ -126,14 +126,13 @@ static void executeJSFunctionFromReservedSpot(JSContext *cx, JSObject *obj,
 
     jsval func = JS_GetReservedSlot(obj, 0);
 
-    if (func == JSVAL_VOID) { return; }
+    if (func == JSVAL_VOID || func.isPrimitive()) { return; }
     jsval thisObj = JS_GetReservedSlot(obj, 1);
     JSAutoCompartment ac(cx, obj);
     
-    if (thisObj == JSVAL_VOID) {
+    if (thisObj == JSVAL_VOID || thisObj.isPrimitive()) {
         JS_CallFunctionValue(cx, obj, func, 1, &dataVal, &retval);
     } else {
-        assert(!JSVAL_IS_PRIMITIVE(thisObj));
         JS_CallFunctionValue(cx, JSVAL_TO_OBJECT(thisObj), func, 1, &dataVal, &retval);
     }
 }
@@ -1050,30 +1049,6 @@ int ScriptingCore::handleComponentEvent(void* data)
     return ret;
 }
 
-int ScriptingCore::handleMenuClickedEvent(void* data)
-{
-    if (NULL == data)
-        return 0;
-    
-    BasicScriptData* basicScriptData = static_cast<BasicScriptData*>(data);
-    if (NULL == basicScriptData->nativeObject)
-        return 0;
-    
-    MenuItem* menuItem = static_cast<MenuItem*>(basicScriptData->nativeObject);
-    
-    js_proxy_t * p = jsb_get_native_proxy(menuItem);
-    if (!p) return 0;
-
-    jsval retval;
-    jsval dataVal;
-    js_proxy_t *proxy = jsb_get_native_proxy(menuItem);
-    dataVal = (proxy ? OBJECT_TO_JSVAL(proxy->obj) : JSVAL_NULL);
-
-    executeJSFunctionFromReservedSpot(this->_cx, p->obj, dataVal, retval);
-
-    return 1;
-}
-
 bool ScriptingCore::handleTouchesEvent(void* nativeObj, cocos2d::EventTouch::EventCode eventCode, const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event, jsval* jsvalRet/* = nullptr */)
 {
     JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
@@ -1286,15 +1261,37 @@ bool ScriptingCore::handleKeybardEvent(void* nativeObj, cocos2d::EventKeyboard::
     
     if (isPressed)
     {
-        ret = executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "onKeyPressed", 2, args);
+        ret = executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "_onKeyPressed", 2, args);
     }
     else
     {
-        ret = executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "onKeyReleased", 2, args);
+        ret = executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "_onKeyReleased", 2, args);
     }
 
     removeJSObject(_cx, event);
     
+    return ret;
+}
+
+bool ScriptingCore::handleFocusEvent(void* nativeObj, cocos2d::ui::Widget* widgetLoseFocus, cocos2d::ui::Widget* widgetGetFocus)
+{
+    JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
+
+    js_proxy_t * p = jsb_get_native_proxy(nativeObj);
+
+    if (nullptr == p)
+        return false;
+
+    jsval args[2] = {
+        getJSObject(_cx, widgetLoseFocus),
+        getJSObject(_cx, widgetGetFocus)
+    };
+
+    bool ret = executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "onFocusChanged", 2, args);
+
+    removeJSObject(_cx, widgetLoseFocus);
+    removeJSObject(_cx, widgetGetFocus);
+
     return ret;
 }
 
@@ -1392,9 +1389,6 @@ int ScriptingCore::sendEvent(ScriptEvent* evt)
             }
             break;
         case kMenuClickedEvent:
-            {
-                return handleMenuClickedEvent(evt->data);
-            }
             break;
         case kTouchEvent:
             {

@@ -286,9 +286,17 @@
     proto._setTexture = function (texture) {
         var node = this._node;
         // If batchnode, then texture id should be the same
-        if (node._batchNode && node._batchNode.texture != texture) {
-            cc.log(cc._LogInfos.Sprite_setTexture);
-            return;
+        if (node._batchNode) {
+            if(node._batchNode.texture != texture){
+                cc.log(cc._LogInfos.Sprite_setTexture);
+                return;
+            }
+        }else{
+            if(node._texture != texture){
+                node._textureLoaded = texture ? texture._textureLoaded : false;
+                node._texture = texture;
+                this._updateBlendFunc();
+            }
         }
 
         if (texture)
@@ -296,10 +304,6 @@
         else
             this._shaderProgram = cc.shaderCache.programForKey(cc.SHADER_POSITION_COLOR);
 
-        if (!node._batchNode && node._texture != texture) {
-            node._texture = texture;
-            this._updateBlendFunc();
-        }
     };
 
     proto.updateTransform = function () {                                    //called only at batching.
@@ -411,15 +415,15 @@
     };
 
     proto.rendering = function (ctx) {
-        var node = this._node;
-        if (!node._textureLoaded || this._displayedOpacity === 0)
+        var node = this._node, locTexture = node._texture;
+        if ((locTexture &&!locTexture._textureLoaded) || this._displayedOpacity === 0)
             return;
 
-        var gl = ctx || cc._renderContext, locTexture = node._texture;
+        var gl = ctx || cc._renderContext ;
         //cc.assert(!_t._batchNode, "If cc.Sprite is being rendered by cc.SpriteBatchNode, cc.Sprite#draw SHOULD NOT be called");
 
         if (locTexture) {
-            if (locTexture._isLoaded) {
+            if (locTexture._textureLoaded) {
                 this._shaderProgram.use();
                 this._shaderProgram._setUniformForMVPMatrixWithMat4(this._stackMatrix);
 

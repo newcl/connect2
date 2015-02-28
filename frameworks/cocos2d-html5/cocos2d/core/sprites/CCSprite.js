@@ -129,7 +129,6 @@ cc.Sprite = cc.Node.extend(/** @lends cc.Sprite# */{
         self._blendFunc = {src: cc.BLEND_SRC, dst: cc.BLEND_DST};
         self._rect = cc.rect(0, 0, 0, 0);
 
-        self._textureLoaded = true;
         self._softInit(fileName, rect, rotated);
     },
 
@@ -625,7 +624,6 @@ cc.Sprite = cc.Node.extend(/** @lends cc.Sprite# */{
         _t._blendFunc.dst = cc.BLEND_DST;
 
         _t.texture = null;
-        _t._textureLoaded = true;
         _t._flippedX = _t._flippedY = false;
 
         // default transform anchor: center
@@ -681,14 +679,15 @@ cc.Sprite = cc.Node.extend(/** @lends cc.Sprite# */{
      * @param {cc.Texture2D|HTMLImageElement|HTMLCanvasElement} texture A pointer to an existing CCTexture2D object. You can use a CCTexture2D object for many sprites.
      * @param {cc.Rect} [rect] Only the contents inside rect of this texture will be applied for this sprite.
      * @param {Boolean} [rotated] Whether or not the texture rectangle is rotated.
+     * @param {Boolean} [counterclockwise=true] Whether or not the texture rectangle rotation is counterclockwise (texture package is counterclockwise, spine is clockwise).
      * @return {Boolean} true if the sprite is initialized properly, false otherwise.
      */
-    initWithTexture: function (texture, rect, rotated) {
+    initWithTexture: function (texture, rect, rotated, counterclockwise) {
         var _t = this;
         cc.assert(arguments.length != 0, cc._LogInfos.CCSpriteBatchNode_initWithTexture);
 
         rotated = rotated || false;
-        texture = this._renderCmd._handleTextureForRotatedTexture(texture, rect, rotated);
+        texture = this._renderCmd._handleTextureForRotatedTexture(texture, rect, rotated, counterclockwise);
 
         if (!cc.Node.prototype.init.call(_t))
             return false;
@@ -825,15 +824,13 @@ cc.Sprite = cc.Node.extend(/** @lends cc.Sprite# */{
             cc.assert(newFrame, cc._LogInfos.Sprite_setSpriteFrame)
         }
 
-        this.setNodeDirty(true)
+        this.setNodeDirty(true);
 
         var frameOffset = newFrame.getOffset();
         _t._unflippedOffsetPositionFromCenter.x = frameOffset.x;
         _t._unflippedOffsetPositionFromCenter.y = frameOffset.y;
 
         // update rect
-        _t._rectRotated = newFrame.isRotated();
-
         var pNewTexture = newFrame.getTexture();
         var locTextureLoaded = newFrame.textureLoaded();
         if (!locTextureLoaded) {
@@ -845,14 +842,14 @@ cc.Sprite = cc.Node.extend(/** @lends cc.Sprite# */{
                     _t.texture = locNewTexture;
                 _t.setTextureRect(sender.getRect(), sender.isRotated(), sender.getOriginalSize());
                 _t.dispatchEvent("load");
+                _t.setColor(_t.color);
             }, _t);
+        }else{
+            // update texture before updating texture rect
+            if (pNewTexture != _t._texture)
+                _t.texture = pNewTexture;
+            _t.setTextureRect(newFrame.getRect(), newFrame.isRotated(), newFrame.getOriginalSize());
         }
-        // update texture before updating texture rect
-        if (pNewTexture != _t._texture)
-            _t.texture = pNewTexture;
-
-        _t.setTextureRect(newFrame.getRect(), _t._rectRotated, newFrame.getOriginalSize());
-
         this._renderCmd._updateForSetSpriteFrame(pNewTexture);
     },
 
@@ -924,26 +921,42 @@ cc.Sprite = cc.Node.extend(/** @lends cc.Sprite# */{
      * @param {cc.Texture2D|String} texture
      */
     setTexture: function (texture) {
-        var _t = this;
-        if(texture && (cc.isString(texture))){
-            texture = cc.textureCache.addImage(texture);
-            _t.setTexture(texture);
-            //TODO
-            var size = texture.getContentSize();
-            _t.setTextureRect(cc.rect(0,0, size.width, size.height));
-            //If image isn't loaded. Listen for the load event.
-            if(!texture._isLoaded){
-                texture.addEventListener("load", function(){
-                    var size = texture.getContentSize();
-                    _t.setTextureRect(cc.rect(0,0, size.width, size.height));
-                }, this);
-            }
-            return;
-        }
-        // CCSprite: setTexture doesn't work when the sprite is rendered using a CCSpriteSheet
-        cc.assert(!texture || texture instanceof cc.Texture2D, cc._LogInfos.Sprite_setTexture_2);
+        if(!texture)
+            return this._renderCmd._setTexture(null);
 
-        this._renderCmd._setTexture(texture);
+        if(cc.isString(texture)){
+            texture = cc.textureCache.addImage(texture);
+
+            if(!texture._textureLoaded){
+                texture.addEventListener("load", function(){
+                    this._renderCmd._setTexture(texture);
+                    this._changeRectWithTexture(texture.getContentSize());
+                    this.setColor(this._realColor);
+                    this._textureLoaded = true;
+                }, this);
+            }else{
+                this._renderCmd._setTexture(texture);
+                this._changeRectWithTexture(texture.getContentSize());
+                this.setColor(this._realColor);
+                this._textureLoaded = true;
+            }
+        }else{
+            // CCSprite: setTexture doesn't work when the sprite is rendered using a CCSpriteSheet
+            cc.assert(texture instanceof cc.Texture2D, cc._LogInfos.Sprite_setTexture_2);
+            this._changeRectWithTexture(texture.getContentSize());
+            this._renderCmd._setTexture(texture);
+        }
+    },
+
+    _changeRectWithTexture: function(rect){
+        if(!rect || (!rect.width && !rect.height)) return;
+        var textureRect = this.getTextureRect();
+        if(textureRect.height || textureRect.width) return;
+        rect.x = rect.x || 0;
+        rect.y = rect.y || 0;
+        rect.width = rect.width || 0;
+        rect.height = rect.height || 0;
+        this.setTextureRect(rect);
     },
 
     _createRenderCmd: function(){

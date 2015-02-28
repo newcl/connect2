@@ -60,6 +60,12 @@ cc.__BrowserGetter = {
 switch(cc.sys.browserType){
     case cc.sys.BROWSER_TYPE_SAFARI:
         cc.__BrowserGetter.meta["minimal-ui"] = "true";
+        cc.__BrowserGetter.availWidth = function(frame){
+            return frame.clientWidth;
+        };
+        cc.__BrowserGetter.availHeight = function(frame){
+            return frame.clientHeight;
+        };
         break;
     case cc.sys.BROWSER_TYPE_CHROME:
         cc.__BrowserGetter.__defineGetter__("target-densitydpi", function(){
@@ -195,8 +201,15 @@ cc.EGLView = cc.Class.extend(/** @lends cc.view# */{
         }else{
             view = cc.view;
         }
+
+        // Check frame size changed or not
+        var prevFrameW = view._frameSize.width, prevFrameH = view._frameSize.height;
+        view._initFrameSize();
+        if (view._frameSize.width == prevFrameW && view._frameSize.height == prevFrameH)
+            return;
+
+        // Frame size changed, do resize works
         if (view._resizeCallback) {
-            view._initFrameSize();
             view._resizeCallback.call();
         }
         var width = view._originalDesignResolutionSize.width;
@@ -239,13 +252,15 @@ cc.EGLView = cc.Class.extend(/** @lends cc.view# */{
             //enable
             if (!this.__resizeWithBrowserSize) {
                 this.__resizeWithBrowserSize = true;
-                cc._addEventListener(window, 'resize', this._resizeEvent, false);
+                cc._addEventListener(window, 'resize', this._resizeEvent);
+                cc._addEventListener(window, 'orientationchange', this._resizeEvent);
             }
         } else {
             //disable
             if (this.__resizeWithBrowserSize) {
                 this.__resizeWithBrowserSize = false;
-                window.removeEventListener('resize', this._resizeEvent, false);
+                window.removeEventListener('resize', this._resizeEvent);
+                window.removeEventListener('orientationchange', this._resizeEvent);
             }
         }
     },

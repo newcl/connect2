@@ -20,11 +20,13 @@ var GameSceneLayer = function () {
         return cc.rotateTo(time, rotateAngle, rotateAngle);
     }
 
-    return cc.LayerColor.extend({
+    return cc.Layer.extend({
         sprite:null,
+        viewScore:0,
         game: null,
         tileLayer:null,
         uiLayer:null,
+        scoreText:null,
         backgroundLayer:null,
         leftMargin:60,
         rightMargin:60,
@@ -49,7 +51,7 @@ var GameSceneLayer = function () {
         },
         tryTintSelectedGameTileView: function (gameTileView) {
             if(!gameTileView.sprite.getActionByTag(TAG_TINT_FOR_SELECTION)) {
-                var action = cc.RepeatForever.create(cc.sequence(new cc.TintTo(0.4,50,50,50), new cc.TintTo(0.4, 170,170,170)));
+                var action = cc.RepeatForever.create(cc.sequence(new cc.TintTo(0.2,100,100,100), new cc.TintTo(0.2, 200,200,200)));
                 action.setTag(TAG_TINT_FOR_SELECTION);
                 gameTileView.sprite.runAction(action);
             }
@@ -61,9 +63,11 @@ var GameSceneLayer = function () {
         reset: function () {
             this.game = new Game();
             this.createGameTileViews(this.game);
+            this.viewScore = 0;
+            this.scoreText.setText(this.viewScore+"");
         },
         cleanupForGameTileView: function (gameTileView) {
-            //gameTileView.removeFromParent();
+            //gameTileView.removefromParent();
             cc.eventManager.removeListener(gameTileView.listener);
             delete gameTileView.listener;
         },
@@ -114,6 +118,19 @@ var GameSceneLayer = function () {
             //mega coin splash
             var path = this.game.connect(selectedGameTileView.gameTile.position, newSelected.gameTile.position);
 
+            if (this.game.isEmpty()) {
+                cc.audioEngine.playEffect("res/sound/clear.wav",false);
+            } else {
+                if (newSelected.gameTile.key.indexOf("cat") > -1) {
+                    cc.audioEngine.playEffect("res/sound/cat"+((Math.random()*4)<<0)+".wav",false);
+                } else {
+                    cc.audioEngine.playEffect("res/sound/connect.wav", false);
+                }
+
+                
+                this.game.score += 200;
+            }
+
             this.cleanupForGameTileView(selectedGameTileView);
             this.cleanupForGameTileView(newSelected);
 
@@ -135,9 +152,11 @@ var GameSceneLayer = function () {
                             this.onConnected(newSelected);
                         } else {
                             //nooooooooooooo
+                            cc.audioEngine.playEffect("res/sound/connect_fail.wav");
+
                             this.stopTintSelectedGameTileView(selectedGameTileView);
 
-                            this.shake(selectedGameTileView);
+                            this.shake(newSelected);
 
                             selectedGameTileView = newSelected;
                             this.tryTintSelectedGameTileView(selectedGameTileView);
@@ -183,21 +202,49 @@ var GameSceneLayer = function () {
                 this.createGameTileView(gameTile);
             }, this);
         },
-        initScene: function () {
-            this._super();
+        initUi:function () {
+            var ui = ccs.load("res/ui/main_ui.json");
+            this.uiLayer = ui.node;
+            this.addChild(this.uiLayer);
 
+            var winSize = cc.director.getWinSize();
+            var top = this.uiLayer.getChildByName("top");
+            top.setPositionY(winSize.height);
+            var scoreText = top.getChildByName("score");
+            scoreText.setText("0");
+            this.scoreText = scoreText;
+
+        },
+        update:function (dt) {
+            this._super();
+            if (this.viewScore != this.game.score) {
+                var delta = this.game.score - this.viewScore;
+                if (delta <= 2) {
+                    this.viewScore = this.game.score;
+                } else {
+                    this.viewScore += delta/2;
+                }
+
+                this.scoreText.setText((this.viewScore<<0) + "");
+            }
+        },
+        initScene: function () {
             var size = this.getContentSize();
             //alert(size.width+"-"+size.height);
             this.horizontalInterval = (size.width - this.leftMargin - this.rightMargin - blockSize*columnCount) / (columnCount+1);
             this.verticalInterval = (size.height - this.topMargin - this.bottomMargin - blockSize*rowCount) / (rowCount+1);
 
             this.backgroundLayer = new cc.LayerColor();
-            var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
-            this.backgroundLayer.addChild(particleBackground);
+            // var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
+            // this.backgroundLayer.addChild(particleBackground);
             this.addChild(this.backgroundLayer);
 
             this.tileLayer = new cc.Layer();
             this.addChild(this.tileLayer);
+
+            this.initUi();
+
+            this.scheduleUpdate();
 
             this.reset();
         },
@@ -224,8 +271,8 @@ var GameScene = function () {
         onEnter:function () {
             this._super();
             var layer = new GameSceneLayer();
-            layer.init();
-            layer.setColor(new cc.Color(0xff,0xff,0xff,0xff));
+            // layer.init();
+            layer.setColor(new cc.Color(0xff,0,0,0xff));
 
             this.addChild(layer);
         }

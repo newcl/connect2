@@ -83,6 +83,8 @@ cc.__getListenerID = function (event) {
         return cc._EventListenerKeyboard.LISTENER_ID;
     if(getType === eventType.MOUSE)
         return cc._EventListenerMouse.LISTENER_ID;
+    if(getType === eventType.FOCUS)
+        return cc._EventListenerFocus.LISTENER_ID;
     if(getType === eventType.TOUCH){
         // Touch listener is very special, it contains two kinds of listeners, EventListenerTouchOneByOne and EventListenerTouchAllAtOnce.
         // return UNKNOWN instead.
@@ -942,6 +944,14 @@ cc.EventHelper.prototype = {
     },
 
     addEventListener: function ( type, listener, target ) {
+        //check 'type' status, if the status is ready, dispatch event next frame
+        if(type === "load" && this._textureLoaded){            //only load event checked.
+            setTimeout(function(){
+                listener.call(target);
+            }, 0);
+            return;
+        }
+
         if ( this._listeners === undefined )
             this._listeners = {};
 

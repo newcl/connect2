@@ -57,11 +57,16 @@ THE SOFTWARE.
 #include "base/CCConsole.h"
 #include "base/CCAutoreleasePool.h"
 #include "base/CCConfiguration.h"
+#include "base/CCAsyncTaskPool.h"
 #include "platform/CCApplication.h"
 //#include "platform/CCGLViewImpl.h"
 
 #if CC_ENABLE_SCRIPT_BINDING
 #include "CCScriptSupport.h"
+#endif
+
+#if CC_USE_PHYSICS
+#include "physics/CCPhysicsWorld.h"
 #endif
 
 /**
@@ -123,6 +128,7 @@ bool Director::init(void)
     _FPSLabel = _drawnBatchesLabel = _drawnVerticesLabel = nullptr;
     _totalFrames = 0;
     _lastUpdate = new struct timeval;
+    _secondsPerFrame = 1.0f;
 
     // paused ?
     _paused = false;
@@ -132,7 +138,7 @@ bool Director::init(void)
     
     // restart ?
     _restartDirectorInNextLoop = false;
-    
+
     _winSizeInPoints = Size::ZERO;
 
     _openGLView = nullptr;
@@ -246,9 +252,6 @@ void Director::setGLDefaultValues()
     // [self setDepthTest: view_.depthFormat];
     setDepthTest(false);
     setProjection(_projection);
-
-    // set other opengl default values
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 // Draw the Scene
@@ -257,12 +260,6 @@ void Director::drawScene()
     // calculate "global" dt
     calculateDeltaTime();
     
-    // skip one flame when _deltaTime equal to zero.
-    if(_deltaTime < FLT_EPSILON)
-    {
-        return;
-    }
-
     if (_openGLView)
     {
         _openGLView->pollEvents();
@@ -275,7 +272,7 @@ void Director::drawScene()
         _eventDispatcher->dispatchEvent(_eventAfterUpdate);
     }
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    _renderer->clear();
 
     /* to avoid flickr, nextScene MUST be here: after tick and before draw.
      * FIXME: Which bug is this one. It seems that it can't be reproduced with v0.9
@@ -289,6 +286,13 @@ void Director::drawScene()
     
     if (_runningScene)
     {
+#if CC_USE_PHYSICS
+        auto physicsWorld = _runningScene->getPhysicsWorld();
+        if (physicsWorld && physicsWorld->isAutoStep())
+        {
+            physicsWorld->update(_deltaTime, false);
+        }
+#endif
         //clear draw stats
         _renderer->clearDrawStats();
         
@@ -296,6 +300,12 @@ void Director::drawScene()
         _runningScene->render(_renderer);
         
         _eventDispatcher->dispatchEvent(_eventAfterVisit);
+#if CC_USE_PHYSICS
+        if(physicsWorld)
+        {
+            physicsWorld->_updateBodyTransform = false;
+        }
+#endif
     }
 
     // draw the notifications node
@@ -697,18 +707,12 @@ void Director::setAlphaBlending(bool on)
 
 void Director::setDepthTest(bool on)
 {
-    if (on)
-    {
-        glClearDepth(1.0f);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
-//        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    }
-    else
-    {
-        glDisable(GL_DEPTH_TEST);
-    }
-    CHECK_GL_ERROR_DEBUG();
+    _renderer->setDepthTest(on);
+}
+
+void Director::setClearColor(const Color4F& clearColor)
+{
+    _renderer->setClearColor(clearColor);
 }
 
 static void GLToClipTransform(Mat4 *transformOut)
@@ -759,17 +763,17 @@ Vec2 Director::convertToUI(const Vec2& glPoint)
     Vec4 glCoord(glPoint.x, glPoint.y, 0.0, 1);
     transform.transformVector(glCoord, &clipCoord);
 
-	/*
-	BUG-FIX #5506
+    /*
+    BUG-FIX #5506
 
-	a = (Vx, Vy, Vz, 1)
-	b = (a×M)T
-	Out = 1 ⁄ bw(bx, by, bz)
-	*/
-	
-	clipCoord.x = clipCoord.x / clipCoord.w;
-	clipCoord.y = clipCoord.y / clipCoord.w;
-	clipCoord.z = clipCoord.z / clipCoord.w;
+    a = (Vx, Vy, Vz, 1)
+    b = (a×M)T
+    Out = 1 ⁄ bw(bx, by, bz)
+    */
+    
+    clipCoord.x = clipCoord.x / clipCoord.w;
+    clipCoord.y = clipCoord.y / clipCoord.w;
+    clipCoord.z = clipCoord.z / clipCoord.w;
 
     Size glSize = _openGLView->getDesignResolutionSize();
     float factor = 1.0/glCoord.w;
@@ -939,85 +943,17 @@ void Director::restart()
     _restartDirectorInNextLoop = true;
 }
 
-void Director::restartDirector()
-{
-    // cleanup scheduler
-    getScheduler()->unscheduleAll();
-    // Disable event dispatching
-    if (_eventDispatcher)
-    {
-        _eventDispatcher->setEnabled(false);
-    }
-
-    if (_runningScene)
-    {
-        _runningScene->onExit();
-        _runningScene->cleanup();
-        _runningScene->release();
-    }
-
-    _runningScene = nullptr;
-    _nextScene = nullptr;
-
-    // remove all objects, but don't release it.
-    // runWithScene might be executed after 'end'.
-    _scenesStack.clear();
-
-    stopAnimation();
-
-    CC_SAFE_RELEASE_NULL(_FPSLabel);
-    CC_SAFE_RELEASE_NULL(_drawnBatchesLabel);
-    CC_SAFE_RELEASE_NULL(_drawnVerticesLabel);
-
-    // purge bitmap cache
-    FontFNT::purgeCachedData();
-
-    FontFreeType::shutdownFreeType();
-
-    // purge all managed caches
-
-    AnimationCache::destroyInstance();
-    SpriteFrameCache::destroyInstance();
-    GLProgramCache::destroyInstance();
-    GLProgramStateCache::destroyInstance();
-    std::vector<std::string> searchPaths;
-    FileUtils::getInstance()->setSearchPaths(searchPaths);
-    FileUtils::getInstance()->purgeCachedEntries();
-
-    // cocos2d-x specific data structures
-    UserDefault::destroyInstance();
-
-    GL::invalidateStateCache();
-
-    //destroyTextureCache();
-    _textureCache->removeAllTextures();
-
-    // Disable event dispatching
-    if (_eventDispatcher)
-    {
-        _eventDispatcher->setEnabled(true);
-    }
-
-    // release the objects
-    PoolManager::getInstance()->getCurrentPool()->clear();
-    
-#if CC_ENABLE_SCRIPT_BINDING
-    ScriptEvent scriptEvent(kRestartGame, NULL);
-    ScriptEngineManager::getInstance()->getScriptEngine()->sendEvent(&scriptEvent);
-#endif
-}
-
-void Director::purgeDirector()
+void Director::reset()
 {
     // cleanup scheduler
     getScheduler()->unscheduleAll();
     
-    // Disable event dispatching
+    // Remove all events
     if (_eventDispatcher)
     {
-        _eventDispatcher->setEnabled(false);
+        _eventDispatcher->removeAllEventListeners();
     }
-
+    
     if (_runningScene)
     {
         _runningScene->onExit();
@@ -1027,22 +963,22 @@ void Director::purgeDirector()
     
     _runningScene = nullptr;
     _nextScene = nullptr;
-
+    
     // remove all objects, but don't release it.
     // runWithScene might be executed after 'end'.
     _scenesStack.clear();
-
+    
     stopAnimation();
-
+    
     CC_SAFE_RELEASE_NULL(_FPSLabel);
     CC_SAFE_RELEASE_NULL(_drawnBatchesLabel);
     CC_SAFE_RELEASE_NULL(_drawnVerticesLabel);
-
+    
     // purge bitmap cache
     FontFNT::purgeCachedData();
-
+    
     FontFreeType::shutdownFreeType();
-
+    
     // purge all managed caches
     
 #if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
@@ -1051,7 +987,10 @@ void Director::purgeDirector()
 #pragma warning (push)
 #pragma warning (disable: 4996)
 #endif
+//it will crash clang static analyzer so hide it if __clang_analyzer__ defined
+#ifndef __clang_analyzer__
     DrawPrimitives::free();
+#endif
 #if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
 #pragma GCC diagnostic warning "-Wdeprecated-declarations"
 #elif _MSC_VER >= 1400 //vs 2005 or higher
@@ -1062,13 +1001,19 @@ void Director::purgeDirector()
     GLProgramCache::destroyInstance();
     GLProgramStateCache::destroyInstance();
     FileUtils::destroyInstance();
-
+    AsyncTaskPool::destoryInstance();
+    
     // cocos2d-x specific data structures
     UserDefault::destroyInstance();
     
     GL::invalidateStateCache();
     
     destroyTextureCache();
+}
+
+void Director::purgeDirector()
+{
+    reset();
 
     CHECK_GL_ERROR_DEBUG();
     
@@ -1081,6 +1026,26 @@ void Director::purgeDirector()
 
     // delete Director
     release();
+}
+
+void Director::restartDirector()
+{
+    reset();
+    
+    // Texture cache need to be reinitialized
+    initTextureCache();
+    
+    // Reschedule for action manager
+    getScheduler()->scheduleUpdate(getActionManager(), Scheduler::PRIORITY_SYSTEM, false);
+    
+    // release the objects
+    PoolManager::getInstance()->getCurrentPool()->clear();
+    
+    // Real restart in script level
+#if CC_ENABLE_SCRIPT_BINDING
+    ScriptEvent scriptEvent(kRestartGame, NULL);
+    ScriptEngineManager::getInstance()->getScriptEngine()->sendEvent(&scriptEvent);
+#endif
 }
 
 void Director::setNextScene()
@@ -1155,8 +1120,8 @@ void Director::showStats()
 {
     static unsigned long prevCalls = 0;
     static unsigned long prevVerts = 0;
-    static float prevDeltaTime  = 0.016; // 60FPS
-    static const float FPS_FILTER = 0.10;
+    static float prevDeltaTime  = 0.016f; // 60FPS
+    static const float FPS_FILTER = 0.10f;
 
     _accumDt += _deltaTime;
     
@@ -1192,7 +1157,7 @@ void Director::showStats()
             prevVerts = currentVerts;
         }
 
-        Mat4 identity = Mat4::IDENTITY;
+        const Mat4& identity = Mat4::IDENTITY;
         _drawnVerticesLabel->visit(_renderer, identity, 0);
         _drawnBatchesLabel->visit(_renderer, identity, 0);
         _FPSLabel->visit(_renderer, identity, 0);
@@ -1202,7 +1167,7 @@ void Director::showStats()
 void Director::calculateMPF()
 {
     static float prevSecondsPerFrame = 0;
-    static const float MPF_FILTER = 0.10;
+    static const float MPF_FILTER = 0.10f;
 
     struct timeval now;
     gettimeofday(&now, nullptr);
@@ -1339,7 +1304,6 @@ void Director::setEventDispatcher(EventDispatcher* dispatcher)
     }
 }
 
-
 /***************************************************
 * implementation of DisplayLinkDirector
 **************************************************/
@@ -1401,4 +1365,3 @@ void DisplayLinkDirector::setAnimationInterval(double interval)
 }
 
 NS_CC_END
-

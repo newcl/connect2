@@ -763,26 +763,6 @@ EventTouch : function (
 };
 
 /**
- * @class EventKeyboard
- */
-cc.EventKeyboard = {
-
-/**
- * @method EventKeyboard
- * @constructor
- * @param {cc.EventKeyboard::KeyCode} arg0
- * @param {bool} arg1
- */
-EventKeyboard : function (
-keycode, 
-bool 
-)
-{
-},
-
-};
-
-/**
  * @class Node
  */
 cc.Node = {
@@ -831,6 +811,18 @@ getGLProgram : function (
 )
 {
     return cc.GLProgram;
+},
+
+/**
+ * @method updateTransformFromPhysics
+ * @param {mat4_object} arg0
+ * @param {unsigned int} arg1
+ */
+updateTransformFromPhysics : function (
+mat4, 
+int 
+)
+{
 },
 
 /**
@@ -1480,6 +1472,20 @@ action
 },
 
 /**
+ * @method visit
+* @param {cc.Renderer} renderer
+* @param {mat4_object} mat4
+* @param {unsigned int} int
+*/
+visit : function(
+renderer,
+mat4,
+int 
+)
+{
+},
+
+/**
  * @method setGLProgram
  * @param {cc.GLProgram} arg0
  */
@@ -1507,20 +1513,6 @@ getAnchorPointInPoints : function (
 )
 {
     return cc.Vec2;
-},
-
-/**
- * @method visit
-* @param {cc.Renderer} renderer
-* @param {mat4_object} mat4
-* @param {unsigned int} int
-*/
-visit : function(
-renderer,
-mat4,
-int 
-)
-{
 },
 
 /**
@@ -1663,6 +1655,22 @@ str
 */
 setAdditionalTransform : function(
 mat4 
+)
+{
+},
+
+/**
+ * @method updatePhysicsBodyTransform
+ * @param {mat4_object} arg0
+ * @param {unsigned int} arg1
+ * @param {float} arg2
+ * @param {float} arg3
+ */
+updatePhysicsBodyTransform : function (
+mat4, 
+int, 
+float, 
+float 
 )
 {
 },
@@ -2314,6 +2322,16 @@ size
 )
 {
     return false;
+},
+
+/**
+ * @method getDefaultCamera
+ * @return {cc.Camera}
+ */
+getDefaultCamera : function (
+)
+{
+    return cc.Camera;
 },
 
 /**
@@ -3024,6 +3042,16 @@ isNextDeltaTimeZero : function (
 },
 
 /**
+ * @method setClearColor
+ * @param {color4f_object} arg0
+ */
+setClearColor : function (
+color4f 
+)
+{
+},
+
+/**
  * @method setOpenGLView
  * @param {cc.GLView} arg0
  */
@@ -3591,6 +3619,16 @@ str
 },
 
 /**
+ * @method setWritablePath
+ * @param {String} arg0
+ */
+setWritablePath : function (
+str 
+)
+{
+},
+
+/**
  * @method setPopupNotify
  * @param {bool} arg0
  */
@@ -3610,6 +3648,16 @@ str
 )
 {
     return false;
+},
+
+/**
+ * @method setDefaultResourceRootPath
+ * @param {String} arg0
+ */
+setDefaultResourceRootPath : function (
+str 
+)
+{
 },
 
 /**
@@ -3642,6 +3690,16 @@ getWritablePath : function (
 )
 {
     return ;
+},
+
+/**
+ * @method setDelegate
+ * @param {cc.FileUtils} arg0
+ */
+setDelegate : function (
+fileutils 
+)
+{
 },
 
 /**
@@ -4308,16 +4366,6 @@ init : function (
 )
 {
     return false;
-},
-
-/**
- * @method create
- * @return {cc.EventListenerFocus}
- */
-create : function (
-)
-{
-    return cc.EventListenerFocus;
 },
 
 /**
@@ -5593,12 +5641,12 @@ cc.MoveBy = {
 
 /**
  * @method initWithDuration
- * @param {float} arg0
- * @param {vec2_object} arg1
- * @return {bool}
- */
-initWithDuration : function (
-float, 
+* @param {float|float} float
+* @param {vec3_object|vec2_object} vec3
+* @return {bool|bool}
+*/
+initWithDuration : function(
+float,
 vec2 
 )
 {
@@ -5607,12 +5655,12 @@ vec2
 
 /**
  * @method create
- * @param {float} arg0
- * @param {vec2_object} arg1
- * @return {cc.MoveBy}
- */
-create : function (
-float, 
+* @param {float|float} float
+* @param {vec3_object|vec2_object} vec3
+* @return {cc.MoveBy|cc.MoveBy}
+*/
+create : function(
+float,
 vec2 
 )
 {
@@ -5637,12 +5685,12 @@ cc.MoveTo = {
 
 /**
  * @method initWithDuration
- * @param {float} arg0
- * @param {vec2_object} arg1
- * @return {bool}
- */
-initWithDuration : function (
-float, 
+* @param {float|float} float
+* @param {vec3_object|vec2_object} vec3
+* @return {bool|bool}
+*/
+initWithDuration : function(
+float,
 vec2 
 )
 {
@@ -5651,12 +5699,12 @@ vec2
 
 /**
  * @method create
- * @param {float} arg0
- * @param {vec2_object} arg1
- * @return {cc.MoveTo}
- */
-create : function (
-float, 
+* @param {float|float} float
+* @param {vec3_object|vec2_object} vec3
+* @return {cc.MoveTo|cc.MoveTo}
+*/
+create : function(
+float,
 vec2 
 )
 {
@@ -5826,6 +5874,24 @@ JumpBy : function (
  * @class JumpTo
  */
 cc.JumpTo = {
+
+/**
+ * @method initWithDuration
+ * @param {float} arg0
+ * @param {vec2_object} arg1
+ * @param {float} arg2
+ * @param {int} arg3
+ * @return {bool}
+ */
+initWithDuration : function (
+float, 
+vec2, 
+float, 
+int 
+)
+{
+    return false;
+},
 
 /**
  * @method create
@@ -6163,16 +6229,16 @@ char
 
 /**
  * @method create
- * @param {float} arg0
- * @param {unsigned char} arg1
- * @param {unsigned char} arg2
- * @param {unsigned char} arg3
- * @return {cc.TintTo}
- */
-create : function (
-float, 
-char, 
-char, 
+* @param {float|float} float
+* @param {color3b_object|unsigned char} color3b
+* @param {unsigned char} char
+* @param {unsigned char} char
+* @return {cc.TintTo|cc.TintTo}
+*/
+create : function(
+float,
+char,
+char,
 char 
 )
 {
@@ -10522,13 +10588,15 @@ color4f
 
 /**
  * @method drawPoints
- * @param {vec2_object} arg0
- * @param {unsigned int} arg1
- * @param {color4f_object} arg2
- */
-drawPoints : function (
-vec2, 
-int, 
+* @param {vec2_object|vec2_object} vec2
+* @param {unsigned int|unsigned int} int
+* @param {float|color4f_object} float
+* @param {color4f_object} color4f
+*/
+drawPoints : function(
+vec2,
+int,
+float,
 color4f 
 )
 {
@@ -11572,12 +11640,12 @@ enableShadow : function (
 
 /**
  * @method setDimensions
- * @param {unsigned int} arg0
- * @param {unsigned int} arg1
+ * @param {float} arg0
+ * @param {float} arg1
  */
 setDimensions : function (
-int, 
-int 
+float, 
+float 
 )
 {
 },
@@ -11594,7 +11662,7 @@ getString : function (
 
 /**
  * @method getHeight
- * @return {unsigned int}
+ * @return {float}
  */
 getHeight : function (
 )
@@ -11622,17 +11690,17 @@ getTextColor : function (
 
 /**
  * @method setWidth
- * @param {unsigned int} arg0
+ * @param {float} arg0
  */
 setWidth : function (
-int 
+float 
 )
 {
 },
 
 /**
  * @method getMaxLineWidth
- * @return {unsigned int}
+ * @return {float}
  */
 getMaxLineWidth : function (
 )
@@ -11804,10 +11872,10 @@ getDimensions : function (
 
 /**
  * @method setMaxLineWidth
- * @param {unsigned int} arg0
+ * @param {float} arg0
  */
 setMaxLineWidth : function (
-int 
+float 
 )
 {
 },
@@ -11874,17 +11942,17 @@ color4b
 
 /**
  * @method setHeight
- * @param {unsigned int} arg0
+ * @param {float} arg0
  */
 setHeight : function (
-int 
+float 
 )
 {
 },
 
 /**
  * @method getWidth
- * @return {unsigned int}
+ * @return {float}
  */
 getWidth : function (
 )
@@ -15535,6 +15603,200 @@ Sprite : function (
 };
 
 /**
+ * @class Image
+ */
+cc.Image = {
+
+/**
+ * @method hasPremultipliedAlpha
+ * @return {bool}
+ */
+hasPremultipliedAlpha : function (
+)
+{
+    return false;
+},
+
+/**
+ * @method getDataLen
+ * @return {long}
+ */
+getDataLen : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method saveToFile
+ * @param {String} arg0
+ * @param {bool} arg1
+ * @return {bool}
+ */
+saveToFile : function (
+str, 
+bool 
+)
+{
+    return false;
+},
+
+/**
+ * @method hasAlpha
+ * @return {bool}
+ */
+hasAlpha : function (
+)
+{
+    return false;
+},
+
+/**
+ * @method isCompressed
+ * @return {bool}
+ */
+isCompressed : function (
+)
+{
+    return false;
+},
+
+/**
+ * @method getHeight
+ * @return {int}
+ */
+getHeight : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method initWithImageFile
+ * @param {String} arg0
+ * @return {bool}
+ */
+initWithImageFile : function (
+str 
+)
+{
+    return false;
+},
+
+/**
+ * @method getWidth
+ * @return {int}
+ */
+getWidth : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method getBitPerPixel
+ * @return {int}
+ */
+getBitPerPixel : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method getFileType
+ * @return {cc.Image::Format}
+ */
+getFileType : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method getNumberOfMipmaps
+ * @return {int}
+ */
+getNumberOfMipmaps : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method getRenderFormat
+ * @return {cc.Texture2D::PixelFormat}
+ */
+getRenderFormat : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method getData
+ * @return {unsigned char}
+ */
+getData : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method getMipmaps
+ * @return {cc._MipmapInfo}
+ */
+getMipmaps : function (
+)
+{
+    return cc._MipmapInfo;
+},
+
+/**
+ * @method initWithRawData
+ * @param {unsigned char} arg0
+ * @param {long} arg1
+ * @param {int} arg2
+ * @param {int} arg3
+ * @param {int} arg4
+ * @param {bool} arg5
+ * @return {bool}
+ */
+initWithRawData : function (
+char, 
+long, 
+int, 
+int, 
+int, 
+bool 
+)
+{
+    return false;
+},
+
+/**
+ * @method setPVRImagesHavePremultipliedAlpha
+ * @param {bool} arg0
+ */
+setPVRImagesHavePremultipliedAlpha : function (
+bool 
+)
+{
+},
+
+/**
+ * @method Image
+ * @constructor
+ */
+Image : function (
+)
+{
+},
+
+};
+
+/**
  * @class RenderTexture
  */
 cc.RenderTexture = {
@@ -18219,6 +18481,18 @@ getType : function (
 },
 
 /**
+ * @method getDepthInView
+ * @param {mat4_object} arg0
+ * @return {float}
+ */
+getDepthInView : function (
+mat4 
+)
+{
+    return 0;
+},
+
+/**
  * @method lookAt
  * @param {vec3_object} arg0
  * @param {vec3_object} arg1
@@ -18228,6 +18502,18 @@ vec3,
 vec3 
 )
 {
+},
+
+/**
+ * @method isVisibleInFrustum
+ * @param {cc.AABB} arg0
+ * @return {bool}
+ */
+isVisibleInFrustum : function (
+aabb 
+)
+{
+    return false;
 },
 
 /**
@@ -18337,6 +18623,16 @@ float,
 float, 
 float, 
 float 
+)
+{
+    return cc.Camera;
+},
+
+/**
+ * @method getDefaultCamera
+ * @return {cc.Camera}
+ */
+getDefaultCamera : function (
 )
 {
     return cc.Camera;

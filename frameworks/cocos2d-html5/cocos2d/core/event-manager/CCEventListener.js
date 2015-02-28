@@ -263,11 +263,24 @@ cc.EventListener.MOUSE = 4;
  */
 cc.EventListener.ACCELERATION = 5;
 /**
+ * The type code of focus event listener.
+ * @constant
+ * @type {number}
+ */
+cc.EventListener.ACCELERATION = 6;
+/**
  * The type code of custom event listener.
  * @constant
  * @type {number}
  */
-cc.EventListener.CUSTOM = 6;
+cc.EventListener.CUSTOM = 8;
+
+/**
+ * The type code of Focus change event listener.
+ * @constant
+ * @type {number}
+ */
+cc.EventListener.FOCUS = 7;
 
 cc._EventListenerCustom = cc.EventListener.extend({
     _onCustomEvent: null,
@@ -364,6 +377,10 @@ cc._EventListenerTouchOneByOne = cc.EventListener.extend({
 
     setSwallowTouches: function (needSwallow) {
         this.swallowTouches = needSwallow;
+    },
+
+    isSwallowTouches: function(){
+        return this.swallowTouches;
     },
 
     clone: function () {
@@ -466,7 +483,8 @@ cc.EventListener.create = function(argObj){
     else if(listenerType === cc.EventListener.ACCELERATION){
         listener = new cc._EventListenerAcceleration(argObj.callback);
         delete argObj.callback;
-    }
+    } else if(listenerType === cc.EventListener.FOCUS)
+        listener = new cc._EventListenerFocus();
 
     for(var key in argObj) {
         listener[key] = argObj[key];
@@ -474,3 +492,28 @@ cc.EventListener.create = function(argObj){
 
     return listener;
 };
+
+cc._EventListenerFocus = cc.EventListener.extend({
+    clone: function(){
+        var listener = new cc._EventListenerFocus();
+        listener.onFocusChanged = this.onFocusChanged;
+        return listener;
+    },
+    checkAvailable: function(){
+        if(!this.onFocusChanged){
+            cc.log("Invalid EventListenerFocus!");
+            return false;
+        }
+        return true;
+    },
+    onFocusChanged: null,
+    ctor: function(){
+        var listener = function(event){
+            if(this.onFocusChanged)
+                this.onFocusChanged(event._widgetLoseFocus, event._widgetGetFocus);
+        };
+        cc.EventListener.prototype.ctor.call(this, cc.EventListener.FOCUS, cc._EventListenerFocus.LISTENER_ID, listener);
+    }
+});
+
+cc._EventListenerFocus.LISTENER_ID = "__cc_focus_event";

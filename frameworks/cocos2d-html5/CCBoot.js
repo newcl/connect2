@@ -604,8 +604,15 @@ cc.loader = /** @lends cc.loader# */{
     _createScript: function (jsPath, isAsync, cb) {
         var d = document, self = this, s = cc.newElement('script');
         s.async = isAsync;
-        s.src = jsPath;
         self._jsCache[jsPath] = true;
+        if(cc.game.config["noCache"] && typeof jsPath === "string"){
+            if(self._noCacheRex.test(jsPath))
+                s.src = jsPath + "&_t=" + (new Date() - 0);
+            else
+                s.src = jsPath + "?_t=" + (new Date() - 0);
+        }else{
+            s.src = jsPath;
+        }
         cc._addEventListener(s, 'load', function () {
             s.parentNode.removeChild(s);
             this.removeEventListener('load', arguments.callee, false);
@@ -783,11 +790,13 @@ cc.loader = /** @lends cc.loader# */{
                 callback(null, img);
         };
 
+        var self = this;
         var errorCallback = function () {
             this.removeEventListener('error', errorCallback, false);
 
             if(img.crossOrigin && img.crossOrigin.toLowerCase() == "anonymous"){
                 opt.isCrossOrigin = false;
+                self.release(url);
                 cc.loader.loadImg(url, opt, callback);
             }else{
                 typeof callback == "function" && callback("load image failed");
@@ -832,6 +841,12 @@ cc.loader = /** @lends cc.loader# */{
         }
         var basePath = loader.getBasePath ? loader.getBasePath() : self.resPath;
         var realUrl = self.getUrl(basePath, url);
+        if(cc.game.config["noCache"] && typeof realUrl === "string"){
+            if(self._noCacheRex.test(realUrl))
+                realUrl += "&_t=" + (new Date() - 0);
+            else
+                realUrl += "?_t=" + (new Date() - 0);
+        }
         loader.load(realUrl, url, item, function (err, data) {
             if (err) {
                 cc.log(err);
@@ -844,6 +859,7 @@ cc.loader = /** @lends cc.loader# */{
             }
         });
     },
+    _noCacheRex: /\?/,
 
     /**
      * Get url with basePath.
@@ -1561,7 +1577,7 @@ cc._initSys = function (config, CONFIG_KEY) {
     if (nav.appVersion.indexOf("Win") != -1) osName = sys.OS_WINDOWS;
     else if (iOS) osName = sys.OS_IOS;
     else if (nav.appVersion.indexOf("Mac") != -1) osName = sys.OS_OSX;
-    else if (nav.appVersion.indexOf("X11") != -1) osName = sys.OS_UNIX;
+    else if (nav.appVersion.indexOf("X11") != -1 && nav.appVersion.indexOf("Linux") == -1) osName = sys.OS_UNIX;
     else if (isAndroid) osName = sys.OS_ANDROID;
     else if (nav.appVersion.indexOf("Linux") != -1) osName = sys.OS_LINUX;
 
