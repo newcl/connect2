@@ -12,22 +12,22 @@
         <PrePosition X="0.0000" Y="0.0000" />
         <PreSize X="0.0000" Y="0.0000" />
         <Children>
-          <NodeObjectData Name="top" ActionTag="-817663647" FrameEvent="" Tag="6" HorizontalEdge="BothEdge" TopMargin="60.0000" BottomMargin="800.0000" ComboBoxIndex="1" ColorAngle="90.0000" Scale9Width="1" Scale9Height="1" ctype="PanelObjectData">
-            <Position X="0.0000" Y="900.0000" />
+          <NodeObjectData Name="top" ActionTag="-817663647" FrameEvent="" Tag="6" TopMargin="2.0046" BottomMargin="877.9954" ComboBoxIndex="1" ColorAngle="90.0000" Scale9Width="1" Scale9Height="1" ctype="PanelObjectData">
+            <Position X="0.0000" Y="957.9954" />
             <Scale ScaleX="1.0000" ScaleY="1.0000" />
             <AnchorPoint ScaleY="1.0000" />
             <CColor A="255" R="255" G="255" B="255" />
-            <Size X="640.0000" Y="100.0000" />
-            <PrePosition X="0.0000" Y="0.9375" />
-            <PreSize X="1.0000" Y="0.1042" />
+            <Size X="640.0000" Y="80.0000" />
+            <PrePosition X="0.0000" Y="0.9979" />
+            <PreSize X="1.0000" Y="0.0833" />
             <Children>
-              <NodeObjectData Name="score" ActionTag="927654179" FrameEvent="" Tag="7" LeftMargin="423.3831" RightMargin="16.6169" TopMargin="3.7321" BottomMargin="46.2679" IsCustomSize="True" FontSize="36" LabelText="100" HorizontalAlignmentType="HT_Right" VerticalAlignmentType="VT_Center" ctype="TextObjectData">
-                <Position X="523.3831" Y="71.2679" />
+              <NodeObjectData Name="score" ActionTag="927654179" FrameEvent="" Tag="7" LeftMargin="431.3827" RightMargin="8.6173" TopMargin="13.7319" BottomMargin="16.2681" IsCustomSize="True" FontSize="36" LabelText="100" HorizontalAlignmentType="HT_Right" VerticalAlignmentType="VT_Center" ctype="TextObjectData">
+                <Position X="531.3827" Y="41.2681" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <Size X="200.0000" Y="50.0000" />
-                <PrePosition X="0.8178" Y="0.7127" />
+                <PrePosition X="0.8303" Y="0.5159" />
                 <PreSize X="0.3125" Y="0.5000" />
               </NodeObjectData>
             </Children>

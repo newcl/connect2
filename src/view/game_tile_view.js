@@ -15,7 +15,7 @@ var GameTileView = function () {
             this.setContentSize(size);
 
             this.sprite = new cc.Sprite(this.gameTile.key);
-            this.sprite.setScale(0.75);
+            // this.sprite.setScale(0.75);
             this.addChild(this.sprite);
             this.sprite.setPosition(cc.p(this.getContentSize().width/2, this.getContentSize().height/2));
 

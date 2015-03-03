@@ -40,15 +40,14 @@
             "Tag": 6,
             "PrePosition": {
               "X": 0.0,
-              "Y": 0.9375
+              "Y": 0.9979
             },
             "PreSize": {
               "X": 1.0,
-              "Y": 0.1042
+              "Y": 0.0833333358
             },
-            "HorizontalEdge": "BothEdge",
-            "TopMargin": 60.0,
-            "BottomMargin": 800.0,
+            "TopMargin": 2.00457764,
+            "BottomMargin": 877.9954,
             "Children": [
               {
                 "IsCustomSize": true,
@@ -58,21 +57,21 @@
                 "VerticalAlignmentType": "VT_Center",
                 "Tag": 7,
                 "PrePosition": {
-                  "X": 0.817786038,
-                  "Y": 0.712679446
+                  "X": 0.83028543,
+                  "Y": 0.5158516
                 },
                 "PreSize": {
                   "X": 0.3125,
                   "Y": 0.5
                 },
-                "LeftMargin": 423.383057,
-                "RightMargin": 16.6169434,
-                "TopMargin": 3.73205566,
-                "BottomMargin": 46.2679443,
+                "LeftMargin": 431.3827,
+                "RightMargin": 8.61731,
+                "TopMargin": 13.7318726,
+                "BottomMargin": 16.2681274,
                 "ActionTag": 927654179,
                 "Position": {
-                  "X": 523.383057,
-                  "Y": 71.2679443
+                  "X": 531.3827,
+                  "Y": 41.2681274
                 },
                 "Scale": {
                   "ScaleX": 1.0,
@@ -95,7 +94,7 @@
             "ActionTag": -817663647,
             "Position": {
               "X": 0.0,
-              "Y": 900.0
+              "Y": 957.9954
             },
             "Scale": {
               "ScaleX": 1.0,
@@ -107,7 +106,7 @@
             "CColor": {},
             "Size": {
               "X": 640.0,
-              "Y": 100.0
+              "Y": 80.0
             },
             "FrameEvent": "",
             "Name": "top",
@@ -137,7 +136,7 @@
             },
             "PreSize": {
               "X": 1.0,
-              "Y": 0.0833333358
+              "Y": 0.0833
             },
             "HorizontalEdge": "BothEdge",
             "TopMargin": 880.0,
@@ -167,21 +166,21 @@
                 "TouchEnable": true,
                 "Tag": 8,
                 "PrePosition": {
-                  "X": 0.09236431,
-                  "Y": 0.48996526
+                  "X": 0.0924,
+                  "Y": 0.49
                 },
                 "PreSize": {
-                  "X": 0.2671875,
+                  "X": 0.2672,
                   "Y": 2.1625
                 },
-                "LeftMargin": -26.38684,
-                "RightMargin": 495.386841,
-                "TopMargin": -45.69722,
-                "BottomMargin": -47.30278,
+                "LeftMargin": -26.3868,
+                "RightMargin": 495.3868,
+                "TopMargin": -45.6972,
+                "BottomMargin": -47.3028,
                 "ActionTag": 850254998,
                 "Position": {
-                  "X": 59.11316,
-                  "Y": 39.19722
+                  "X": 59.1132,
+                  "Y": 39.1972
                 },
                 "Scale": {
                   "ScaleX": 0.35,
@@ -225,20 +224,20 @@
                 "TouchEnable": true,
                 "Tag": 9,
                 "PrePosition": {
-                  "X": 0.236122221,
+                  "X": 0.2361,
                   "Y": 0.49
                 },
                 "PreSize": {
-                  "X": 0.2671875,
+                  "X": 0.2672,
                   "Y": 2.1625
                 },
-                "LeftMargin": 65.6182251,
-                "RightMargin": 403.381775,
-                "TopMargin": -45.6999969,
+                "LeftMargin": 65.6182,
+                "RightMargin": 403.3818,
+                "TopMargin": -45.7,
                 "BottomMargin": -47.3,
                 "ActionTag": 995465500,
                 "Position": {
-                  "X": 151.118225,
+                  "X": 151.1182,
                   "Y": 39.2
                 },
                 "Scale": {

@@ -47,13 +47,43 @@
  *
  */
 
+var blockSize = 128;
+var topMargin = 20;
+var bottomMargin = 20;
+var uiTopHeight = 80;
+var uiBottomHeight = 80;
+
+var rowCount = 7;
+var columnCount = 5;
+var designHeight = uiTopHeight + topMargin + blockSize * rowCount + bottomMargin + uiBottomHeight;
+
 cc.game.onStart = function(){
+    var gameScene = null;
+
     cc.view.adjustViewPort(true);
-    cc.view.setDesignResolutionSize(640, 960, cc.ResolutionPolicy.FIXED_WIDTH);
+
+    //design width & height
+    // height = top(80) + bottom(80) + block(128)*7 + topMargin(20) + bottomMargin(20)
+    // leftMargin = rightMargin = (newDesignHeight - block(128)*5)/2
+    // width = block(128)*5 + leftMargin(?) + rightMargin(?)
+
+    var policy = new cc.ResolutionPolicy(cc.ContainerStrategy.ORIGINAL_CONTAINER, cc.ContentStrategy.FIXED_HEIGHT);
+    // cc.view.setDesignResolutionSize(1000, designHeight, policy);
+
+
+    cc.view.setDesignResolutionSize(1000, designHeight, cc.ResolutionPolicy.FIXED_HEIGHT);
     cc.view.resizeWithBrowserSize(true);
+    cc.view.setResizeCallback(function() {
+        if (gameScene) {
+            // gameScene.onSizeChanged();
+            // cc.director.runScene(new GameScene());    
+        }
+    });
+    // cc.director.setContentScaleFactor(2);
     //load resources
     cc.LoaderScene.preload(allResource, function () {
-        cc.director.runScene(new GameScene());
+        gameScene = new GameScene();
+        cc.director.runScene(gameScene);
     }, this);
 };
 cc.game.run();

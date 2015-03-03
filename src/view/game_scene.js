@@ -3,7 +3,7 @@
  */
 
 var GameSceneLayer = function () {
-    var blockSize = 80;
+    // var blockSize = 80;
     var blockSizeHalf = blockSize/2;
     var selectedGameTileView = null;
 
@@ -214,6 +214,14 @@ var GameSceneLayer = function () {
             scoreText.setText("0");
             this.scoreText = scoreText;
 
+            var bottom = this.uiLayer.getChildByName("bottom");
+            // var designResolution = cc.view.getDesignResolutionSize();
+            // top.setContentSize(cc.size(designResolution.width, uiTopHeight));
+            // bottom.setContentSize(cc.size(designResolution.width, uiBottomHeight));
+
+            var visibleSize = cc.director.getVisibleSize();
+            top.setContentSize(cc.size(visibleSize.width, uiTopHeight));
+            bottom.setContentSize(cc.size(visibleSize.width, uiBottomHeight));
         },
         update:function (dt) {
             this._super();
@@ -234,6 +242,10 @@ var GameSceneLayer = function () {
             this.horizontalInterval = (size.width - this.leftMargin - this.rightMargin - blockSize*columnCount) / (columnCount+1);
             this.verticalInterval = (size.height - this.topMargin - this.bottomMargin - blockSize*rowCount) / (rowCount+1);
 
+            // var designResolution = cc.view.getDesignResolutionSize();
+            var visibleSize = cc.director.getVisibleSize();
+            this.leftMargin = this.rightMargin = (visibleSize.width - blockSize*columnCount)/2;
+
             this.backgroundLayer = new cc.LayerColor();
             // var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
             // this.backgroundLayer.addChild(particleBackground);
@@ -249,7 +261,8 @@ var GameSceneLayer = function () {
             this.reset();
         },
         getPositionInGame: function (position) {
-            return cc.p(this.leftMargin + position.x*(this.horizontalInterval+blockSize) + this.horizontalInterval, this.bottomMargin + position.y*(this.verticalInterval+blockSize) + this.verticalInterval);
+            return cc.p(this.leftMargin + position.x * blockSize, uiBottomHeight + bottomMargin + position.y*blockSize);
+            // return cc.p(this.leftMargin + position.x*(this.horizontalInterval+blockSize) + this.horizontalInterval, this.bottomMargin + position.y*(this.verticalInterval+blockSize) + this.verticalInterval);
         },
         getPositionInGameForSprite:function (position) {
             var p = this.getPositionInGame(position);
