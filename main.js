@@ -47,7 +47,7 @@
  *
  */
 
-var blockSize = 128;
+var blockSize = 64;
 var topMargin = 20;
 var bottomMargin = 20;
 var uiTopHeight = 80;

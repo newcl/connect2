@@ -236,6 +236,25 @@ var GameSceneLayer = function () {
                 this.scoreText.setText((this.viewScore<<0) + "");
             }
         },
+        createBackgroudGrid: function () {
+            var backgroundGrid = new cc.DrawNode();
+
+            var size = cc.size(blockSize*columnCount, blockSize*rowCount);
+            backgroundGrid.setContentSize(size);
+
+            for(var row=0; row<=rowCount;row++) {
+                var lineY = uiBottomHeight+bottomMargin+row*blockSize;
+                backgroundGrid.drawSegment(cc.p(this.leftMargin, lineY), cc.p(this.leftMargin+blockSize*columnCount,lineY), 2, cc.Color.WHITE);
+            }
+
+            for(var col=0; col<=columnCount;col++) {
+                var lineX = this.leftMargin+col*blockSize;
+                backgroundGrid.drawSegment(cc.p(lineX, uiBottomHeight+bottomMargin), cc.p(lineX,uiBottomHeight+bottomMargin+rowCount*blockSize), 2, cc.Color.WHITE);
+            }
+
+
+            return backgroundGrid;
+        },
         initScene: function () {
             var size = this.getContentSize();
             //alert(size.width+"-"+size.height);
@@ -247,6 +266,8 @@ var GameSceneLayer = function () {
             this.leftMargin = this.rightMargin = (visibleSize.width - blockSize*columnCount)/2;
 
             this.backgroundLayer = new cc.LayerColor();
+            var backgroundGrid = this.createBackgroudGrid();
+            this.backgroundLayer.addChild(backgroundGrid);
             // var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
             // this.backgroundLayer.addChild(particleBackground);
             this.addChild(this.backgroundLayer);
