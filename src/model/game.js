@@ -2,8 +2,7 @@
  * Created by chenliang on 15/2/20.
  */
 
-var rowCount = 7;
-var columnCount = 5;
+
 
 function positionToKey (x, y) {
     return x + "-" + y;
