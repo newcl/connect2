@@ -15,8 +15,8 @@ var GameSceneLayer = function () {
     var blockSizeHalf = blockSize/2;
     var selectedGameTileView = null;
 
-    var TAG_TINT_FOR_SELECTION = "__tint_for_selection";
-    var TAG_SHAKE = "__shake";
+    var TAG_TINT_FOR_SELECTION = 10001;
+    var TAG_SHAKE = 10002;
 
     function randomAngle(base, offset) {
         return base + Math.random()*offset;
@@ -103,7 +103,7 @@ var GameSceneLayer = function () {
             var game = new Game();
             this.bind(game);
             this.viewScore = 0;
-            this.scoreText.setText(this.viewScore+"");
+            this.scoreText.setString(this.viewScore+"");
             //this.backgroundLayer.removeAllChildren();
 
         },
@@ -269,7 +269,6 @@ var GameSceneLayer = function () {
             var top = this.uiLayer.getChildByName("top");
             top.setPositionY(winSize.height);
             var scoreText = top.getChildByName("score");
-            scoreText.setText("0");
             scoreText.setPositionX(visibleSize.width -10);
             this.scoreText = scoreText;
 
@@ -307,7 +306,7 @@ var GameSceneLayer = function () {
             bottom.setContentSize(cc.size(visibleSize.width, uiBottomHeight));
         },
         update:function (dt) {
-            this._super();
+            this._super(dt);
             if (this.viewScore != this.game.score) {
                 var delta = this.game.score - this.viewScore;
                 if (delta <= 2) {
@@ -316,8 +315,10 @@ var GameSceneLayer = function () {
                     this.viewScore += delta/2;
                 }
 
-                this.scoreText.setText((this.viewScore<<0) + "");
+                this.scoreText.setString((this.viewScore<<0) + "");
             }
+
+            //cc.log("shit running\n");
         },
         createBackgroudGrid: function () {
             var backgroundGrid = new cc.DrawNode();

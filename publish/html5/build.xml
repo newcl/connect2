@@ -5,7 +5,7 @@
              classpath="/Users/chenliang/software/cocos2d-js-v3.3/tools/cocos2d-console/plugins/project_compile/build_web/bin/compiler-1.7.jar"/>
 
     <target name="compile">
-        <jscomp compilationLevel="simple" 
+        <jscomp compilationLevel="advanced" 
                 warning="quiet"
                 debug="false" 
                 output="/Users/chenliang/git_projects/connect2/publish/html5/game.min.js"
@@ -286,16 +286,6 @@
                 <file name="extensions/spine/CCSkeletonCanvasRenderCmd.js"/>
                 <file name="extensions/spine/CCSkeletonWebGLRenderCmd.js"/>
                 <file name="extensions/ccpool/CCPool.js"/>
-                <file name="cocos2d/physics/CCPhysicsSprite.js"/>
-                <file name="cocos2d/physics/CCPhysicsDebugNode.js"/>
-                <file name="cocos2d/physics/CCPhysicsDebugNodeCanvasRenderCmd.js"/>
-                <file name="cocos2d/physics/CCPhysicsDebugNodeWebGLRenderCmd.js"/>
-                <file name="cocos2d/physics/CCPhysicsSpriteCanvasRenderCmd.js"/>
-                <file name="cocos2d/physics/CCPhysicsSpriteWebGLRenderCmd.js"/>
-                <file name="external/box2d/box2d.js"/>
-                <file name="external/chipmunk/chipmunk.js"/>
-                <file name="external/socketio/socket.io.min.js"/>
-                <file name="external/pluginx/Plugin.js"/>
 
             </sources>
             <sources dir="${basedir}">

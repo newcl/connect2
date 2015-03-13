@@ -67,7 +67,7 @@ cc.game.onStart = function(){
     // leftMargin = rightMargin = (newDesignHeight - block(128)*5)/2
     // width = block(128)*5 + leftMargin(?) + rightMargin(?)
 
-    var policy = new cc.ResolutionPolicy(cc.ContainerStrategy.ORIGINAL_CONTAINER, cc.ContentStrategy.FIXED_HEIGHT);
+//    var policy = new cc.ResolutionPolicy(cc.ContainerStrategy.ORIGINAL_CONTAINER, cc.ContentStrategy.FIXED_HEIGHT);
     // cc.view.setDesignResolutionSize(1000, designHeight, policy);
 
 

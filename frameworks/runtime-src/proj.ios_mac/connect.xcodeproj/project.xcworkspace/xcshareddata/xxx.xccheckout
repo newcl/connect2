@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>941B5DDD-5A17-4BBB-BE07-85C69E2FB780</string>
+	<key>IDESourceControlProjectName</key>
+	<string>xxx</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>11EF13A2EA1CE6B1D5AADE13BDFBFB4C3F2795E6</key>
+		<string>github.com:newcl/connect2.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>frameworks/runtime-src/proj.ios_mac/xxx.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>11EF13A2EA1CE6B1D5AADE13BDFBFB4C3F2795E6</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:newcl/connect2.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>11EF13A2EA1CE6B1D5AADE13BDFBFB4C3F2795E6</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>11EF13A2EA1CE6B1D5AADE13BDFBFB4C3F2795E6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>connect2</string>
+		</dict>
+	</array>
+</dict>
+</plist>
