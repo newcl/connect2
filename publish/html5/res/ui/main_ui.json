@@ -1,6 +1,6 @@
 {
   "ID": "b1a720bb-0264-4f69-ae77-6894dd4a05cf",
-  "Version": "2.1.2.0",
+  "Version": "2.1.5.0",
   "Name": "main_ui",
   "Content": {
     "Content": {
@@ -44,10 +44,10 @@
             },
             "PreSize": {
               "X": 1.0,
-              "Y": 0.0833333358
+              "Y": 0.0625
             },
             "TopMargin": 2.00457764,
-            "BottomMargin": 877.9954,
+            "BottomMargin": 897.9954,
             "Children": [
               {
                 "IsCustomSize": true,
@@ -57,28 +57,28 @@
                 "VerticalAlignmentType": "VT_Center",
                 "Tag": 7,
                 "PrePosition": {
-                  "X": 0.83028543,
-                  "Y": 0.5158516
+                  "X": 0.986535847,
+                  "Y": 0.5544657
                 },
                 "PreSize": {
                   "X": 0.3125,
                   "Y": 0.5
                 },
-                "LeftMargin": 431.3827,
-                "RightMargin": 8.61731,
-                "TopMargin": 13.7318726,
-                "BottomMargin": 16.2681274,
+                "LeftMargin": 431.382935,
+                "RightMargin": 8.617065,
+                "TopMargin": 1.73205566,
+                "BottomMargin": 8.267944,
                 "ActionTag": 927654179,
                 "Position": {
-                  "X": 531.3827,
-                  "Y": 41.2681274
+                  "X": 631.382935,
+                  "Y": 33.2679443
                 },
                 "Scale": {
                   "ScaleX": 1.0,
                   "ScaleY": 1.0
                 },
                 "AnchorPoint": {
-                  "ScaleX": 0.5,
+                  "ScaleX": 1.0,
                   "ScaleY": 0.5
                 },
                 "CColor": {},
@@ -106,7 +106,7 @@
             "CColor": {},
             "Size": {
               "X": 640.0,
-              "Y": 80.0
+              "Y": 60.0
             },
             "FrameEvent": "",
             "Name": "top",
@@ -136,10 +136,10 @@
             },
             "PreSize": {
               "X": 1.0,
-              "Y": 0.0833
+              "Y": 0.0625
             },
             "HorizontalEdge": "BothEdge",
-            "TopMargin": 880.0,
+            "TopMargin": 900.0,
             "Children": [
               {
                 "FontSize": 14,
@@ -166,21 +166,21 @@
                 "TouchEnable": true,
                 "Tag": 8,
                 "PrePosition": {
-                  "X": 0.0924,
-                  "Y": 0.49
+                  "X": 0.0923643559,
+                  "Y": 0.503287256
                 },
                 "PreSize": {
                   "X": 0.2672,
                   "Y": 2.1625
                 },
-                "LeftMargin": -26.3868,
+                "LeftMargin": -26.38681,
                 "RightMargin": 495.3868,
-                "TopMargin": -45.6972,
-                "BottomMargin": -47.3028,
+                "TopMargin": -56.6972351,
+                "BottomMargin": -56.3027649,
                 "ActionTag": 850254998,
                 "Position": {
-                  "X": 59.1132,
-                  "Y": 39.1972
+                  "X": 59.11319,
+                  "Y": 30.1972351
                 },
                 "Scale": {
                   "ScaleX": 0.35,
@@ -224,21 +224,21 @@
                 "TouchEnable": true,
                 "Tag": 9,
                 "PrePosition": {
-                  "X": 0.2361,
-                  "Y": 0.49
+                  "X": 0.236122176,
+                  "Y": 0.520001233
                 },
                 "PreSize": {
                   "X": 0.2672,
                   "Y": 2.1625
                 },
-                "LeftMargin": 65.6182,
+                "LeftMargin": 65.6181946,
                 "RightMargin": 403.3818,
-                "TopMargin": -45.7,
-                "BottomMargin": -47.3,
+                "TopMargin": -57.7000732,
+                "BottomMargin": -55.2999268,
                 "ActionTag": 995465500,
                 "Position": {
                   "X": 151.1182,
-                  "Y": 39.2
+                  "Y": 31.2000732
                 },
                 "Scale": {
                   "ScaleX": 0.35,
@@ -271,7 +271,7 @@
             "CColor": {},
             "Size": {
               "X": 640.0,
-              "Y": 80.0
+              "Y": 60.0
             },
             "FrameEvent": "",
             "Name": "bottom",
