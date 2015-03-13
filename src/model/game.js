@@ -139,6 +139,9 @@ var PathCache = function () {
             //    this.pathKeys[key2] = 1;
             //}
         },
+        hasValidPath:function () {
+            return Object.keys(this.pathMap).length > 0;
+        },
         addPath: function (p1, p2, path) {
             //A->B
             this.recordPath(p1,p2,path);
@@ -190,7 +193,7 @@ var Game = function () {
         initGame: function () {
             iconConfig = new IconConfig();
             iconConfig.init();
-            this.pathCache = new PathCache();
+            
             this.reset();
         },
         isXLinked: function (x1, x2, y) {
@@ -238,9 +241,6 @@ var Game = function () {
         calculateGenerateCount: function () {
 
         },
-        addGameTilePairForKey: function (key) {
-
-        },
         addGameTile: function (key) {
             var position = this.getRandomPosition();
             var gameTile = new GameTile(position, key);
@@ -271,6 +271,9 @@ var Game = function () {
             }
 
             throw new Error("no valid position available");
+        },
+        hasValidPath:function () {
+            return this.pathCache.hasValidPath();
         },
         updateAllPathFor: function (p1, p2) {
             var x1 = p1.x;
@@ -338,6 +341,7 @@ var Game = function () {
             }
         },
         updateAllPath: function () {
+            this.pathCache = new PathCache();
             for(var key in this.gameTileGroup) {
                 var gameTilesForKey = this.gameTileGroup[key];
                 for(var i=0; i < gameTilesForKey.length-1;i ++) {
@@ -435,7 +439,16 @@ var Game = function () {
 
         },
         shuffle: function () {
-
+            do{
+                this.positionMap = {};
+                this.gameTiles.forEach(function (gameTile) {
+                    var position = this.getRandomPosition();
+                    gameTile.setPosition(position);
+                    this.positionMap[positionToKey(position.x, position.y)] = gameTile;
+                }, this);
+                
+                this.updateAllPath();
+            }while(!this.pathCache.hasValidPath());
         },
         canHint: function () {
 

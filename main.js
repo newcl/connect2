@@ -50,8 +50,8 @@
 var blockSize = 64;
 var topMargin = 20;
 var bottomMargin = 20;
-var uiTopHeight = 80;
-var uiBottomHeight = 80;
+var uiTopHeight = 60;
+var uiBottomHeight = 60;
 
 var rowCount = 7;
 var columnCount = 5;
