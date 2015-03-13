@@ -74,7 +74,11 @@ var Path = function () {
 
 var PathCache = function () {
     function positionToKey(p1, p2) {
-        return p1.x+"-"+p1.y+"-"+p2.x+"-"+p2.y;
+        var key = p1.x+"-"+p1.y;
+        if(p2) {
+            key += "-"+p2.x+"-"+p2.y
+        }
+        return key;
 
     }
 
@@ -83,46 +87,78 @@ var PathCache = function () {
         var length2 = p2.elements.length;
         if (length1 < length2) {
             return -1;
+
         } else if(length1 > length2) {
             return 1;
         }
 
         return p1.cost - p2.cost;
     }
-    var pathMap = {};
-    var pathKeys = {};
+
     return cc.Class.extend({
-        addPath: function (p1, p2, path) {
-            //A->B
-            var key1 = positionToKey(p1,p2);
-            if(!(key1 in pathMap)) {
-                pathMap[key1] = [];
+        pathMap:{},
+        pathKeys:{},
+        pathConnectedTo:{},
+        ctor:function() {
+        },
+        recordConnectedTo: function (p, path) {
+            var key = positionToKey(p);
+            var paths = this.pathConnectedTo[key];
+            if(!paths) {
+                paths = [];
+                this.pathConnectedTo[key] = paths;
             }
-            pathMap[key1].push(path);
-            pathMap[key1].sort(comparePathCost);
+
+            paths.push(path);
+        },
+        recordPath: function (p1, p2, path) {
+            //A->B
+            var key = positionToKey(p1,p2);
+            if(!(key in this.pathMap)) {
+                this.pathMap[key] = [];
+            }
+            this.pathMap[key].push(path);
+            this.pathMap[key].sort(comparePathCost);
 
             //B->A
-            var key2 = positionToKey(p2, p1);
-            if(!(key2 in pathMap)) {
-                pathMap[key2] = [];
-            }
-            pathMap[key2].push(path);
-            pathMap[key2].sort(comparePathCost);
+            //var key2 = positionToKey(p2, p1);
+            //if(!(key2 in this.pathMap)) {
+            //    this.pathMap[key2] = [];
+            //}
+            //this.pathMap[key2].push(path);
+            //this.pathMap[key2].sort(comparePathCost);
 
             //register keys
-            if(!(key1 in pathKeys)) {
-                pathKeys[key1] = 1;
+            if(!(key in this.pathKeys)) {
+                this.pathKeys[key] = 1;
             }
-            if(!(key2 in pathKeys)) {
-                pathKeys[key2] = 1;
-            }
+            //if(!(key2 in this.pathKeys)) {
+            //    this.pathKeys[key2] = 1;
+            //}
+        },
+        addPath: function (p1, p2, path) {
+            //A->B
+            this.recordPath(p1,p2,path);
+            //B->A
+            this.recordPath(p2,p1,path);
 
-            assert(Object.keys(pathKeys).length%2==0, "");
+            this.recordConnectedTo(p1, path);
+            this.recordConnectedTo(p2, path);
+
+            assert(Object.keys(this.pathKeys).length%2==0, "");
         },
         getPath: function (p1, p2) {
             var key = positionToKey(p1,p2);
-            if(key in pathMap) {
-                return pathMap[key][0];
+            if(key in this.pathMap) {
+                return this.pathMap[key][0];
+            } else {
+                return null;
+            }
+        },
+        getPathConnectedTo: function (position) {
+            var key = positionToKey(position);
+            if(key in this.pathConnectedTo) {
+                return this.pathConnectedTo[key];
             } else {
                 return null;
             }
@@ -401,14 +437,9 @@ var Game = function () {
         hintProvided: function () {
 
         },
-        getGameTile: function (x, y) {
-
-        },
-        hasLinkedGameTiles: function () {
-
-        },
-        lock: function (x1, y1, x2, y2) {
-
+        getPathConnectedTo: function (position) {
+            var paths = this.pathCache.getPathConnectedTo(position);
+            return paths;
         }
     });
 }();

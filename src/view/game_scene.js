@@ -2,6 +2,14 @@
  * Created by chenliang on 15/2/19.
  */
 
+
+
+
+
+
+function randomColor() {
+    return cc.color(Math.random()*256 << 0, Math.random()*256 <<0, Math.random()*256 <<0, 255);
+}
 var GameSceneLayer = function () {
     // var blockSize = 80;
     var blockSizeHalf = blockSize/2;
@@ -28,6 +36,7 @@ var GameSceneLayer = function () {
         uiLayer:null,
         scoreText:null,
         backgroundLayer:null,
+        hintLayer:null,
         leftMargin:60,
         rightMargin:60,
         topMargin:60,
@@ -55,6 +64,30 @@ var GameSceneLayer = function () {
                 action.setTag(TAG_TINT_FOR_SELECTION);
                 gameTileView.sprite.runAction(action);
             }
+
+            this.hintLayer.removeAllChildren();
+
+            var paths = this.game.getPathConnectedTo(gameTileView.gameTile.position);
+            if(paths != null) {
+                //var path = paths[0];
+                //var colorForPath = randomColor();
+                //path.elements.forEach(function (position) {
+                //    var hintTile = new cc.LayerColor(colorForPath, blockSize, blockSize);
+                //    hintTile.setAnchorPoint(cc.p(0.5,0.5));
+                //    hintTile.setPosition(this.getPositionInGame(position));
+                //    this.hintLayer.addChild(hintTile);
+                //},this);
+                //paths.forEach(function (path) {
+                //    var colorForPath = randomColor();
+                //    path.elements.forEach(function (position) {
+                //        var hintTile = new cc.LayerColor(colorForPath, blockSize, blockSize);
+                //        hintTile.setAnchorPoint(cc.p(0.5,0.5));
+                //        hintTile.setPosition(this.getPositionInGame(position));
+                //        this.hintLayer.addChild(hintTile);
+                //    },this);
+                //}, this);
+            }
+
         },
         stopTintSelectedGameTileView: function (gameTileView) {
             gameTileView.sprite.stopActionByTag(TAG_TINT_FOR_SELECTION);
@@ -65,6 +98,8 @@ var GameSceneLayer = function () {
             this.createGameTileViews(this.game);
             this.viewScore = 0;
             this.scoreText.setText(this.viewScore+"");
+            this.backgroundLayer.removeAllChildren();
+            this.hintLayer.removeAllChildren();
         },
         cleanupForGameTileView: function (gameTileView) {
             //gameTileView.removefromParent();
@@ -242,14 +277,16 @@ var GameSceneLayer = function () {
             var size = cc.size(blockSize*columnCount, blockSize*rowCount);
             backgroundGrid.setContentSize(size);
 
+            var lineWidth = 1;
+
             for(var row=0; row<=rowCount;row++) {
                 var lineY = uiBottomHeight+bottomMargin+row*blockSize;
-                backgroundGrid.drawSegment(cc.p(this.leftMargin, lineY), cc.p(this.leftMargin+blockSize*columnCount,lineY), 2, cc.Color.WHITE);
+                backgroundGrid.drawSegment(cc.p(this.leftMargin, lineY), cc.p(this.leftMargin+blockSize*columnCount,lineY), lineWidth, cc.color(0,0,0,255));
             }
 
             for(var col=0; col<=columnCount;col++) {
                 var lineX = this.leftMargin+col*blockSize;
-                backgroundGrid.drawSegment(cc.p(lineX, uiBottomHeight+bottomMargin), cc.p(lineX,uiBottomHeight+bottomMargin+rowCount*blockSize), 2, cc.Color.WHITE);
+                backgroundGrid.drawSegment(cc.p(lineX, uiBottomHeight+bottomMargin), cc.p(lineX,uiBottomHeight+bottomMargin+rowCount*blockSize), lineWidth, cc.color(0,0,0,255));
             }
 
 
@@ -265,12 +302,15 @@ var GameSceneLayer = function () {
             var visibleSize = cc.director.getVisibleSize();
             this.leftMargin = this.rightMargin = (visibleSize.width - blockSize*columnCount)/2;
 
-            this.backgroundLayer = new cc.LayerColor();
+            this.backgroundLayer = new cc.LayerColor(cc.color(255,255,255,255));
             var backgroundGrid = this.createBackgroudGrid();
             this.backgroundLayer.addChild(backgroundGrid);
             // var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
             // this.backgroundLayer.addChild(particleBackground);
             this.addChild(this.backgroundLayer);
+
+            this.hintLayer = new cc.LayerColor(cc.color(0, 0, 0, 0));
+            this.addChild(this.hintLayer);
 
             this.tileLayer = new cc.Layer();
             this.addChild(this.tileLayer);
@@ -306,7 +346,7 @@ var GameScene = function () {
             this._super();
             var layer = new GameSceneLayer();
             // layer.init();
-            layer.setColor(new cc.Color(0xff,0,0,0xff));
+            //layer.setColor(new cc.Color(0xff,0,0,0xff));
 
             this.addChild(layer);
         }
