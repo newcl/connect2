@@ -94,12 +94,15 @@ var GameSceneLayer = function () {
             gameTileView.sprite.setColor(cc.color(0xff,0xff,0xff,0xff));
         },
         reset: function () {
+            this.hintLayer.removeAllChildren();
+            this.tileLayer.removeAllChildren();
+
             this.game = new Game();
             this.createGameTileViews(this.game);
             this.viewScore = 0;
             this.scoreText.setText(this.viewScore+"");
-            this.backgroundLayer.removeAllChildren();
-            this.hintLayer.removeAllChildren();
+            //this.backgroundLayer.removeAllChildren();
+
         },
         cleanupForGameTileView: function (gameTileView) {
             //gameTileView.removefromParent();
@@ -186,7 +189,6 @@ var GameSceneLayer = function () {
                         if(this.game.canConnect(selectedGameTileView.gameTile.position, newSelected.gameTile.position)) {
                             this.onConnected(newSelected);
                         } else {
-                            //nooooooooooooo
                             cc.audioEngine.playEffect("res/sound/connect_fail.wav");
 
                             this.stopTintSelectedGameTileView(selectedGameTileView);
@@ -242,19 +244,46 @@ var GameSceneLayer = function () {
             this.uiLayer = ui.node;
             this.addChild(this.uiLayer);
 
+            var visibleSize = cc.director.getVisibleSize();
+
             var winSize = cc.director.getWinSize();
             var top = this.uiLayer.getChildByName("top");
             top.setPositionY(winSize.height);
             var scoreText = top.getChildByName("score");
             scoreText.setText("0");
+            scoreText.setPositionX(visibleSize.width -10);
             this.scoreText = scoreText;
 
             var bottom = this.uiLayer.getChildByName("bottom");
-            // var designResolution = cc.view.getDesignResolutionSize();
-            // top.setContentSize(cc.size(designResolution.width, uiTopHeight));
-            // bottom.setContentSize(cc.size(designResolution.width, uiBottomHeight));
+            var shuffle = bottom.getChildByName("shuffle");
+            shuffle.addTouchEventListener(function(sender, type){
+                switch (type) {
+                    case ccui.Widget.TOUCH_BEGAN:
+                        this.reset();
+                        break;
 
-            var visibleSize = cc.director.getVisibleSize();
+                    case ccui.Widget.TOUCH_MOVED:
+                        //this._topDisplayText.setString("Touch Move");
+                        break;
+
+                    case ccui.Widget.TOUCH_ENDED:
+                        //this._topDisplayText.setString("Touch Up");
+                        break;
+
+                    case ccui.Widget.TOUCH_CANCELED:
+                        //this._topDisplayText.setString("Touch Cancelled");
+                        break;
+
+                    default:
+                        break;
+                }
+            },this);
+
+
+
+            //cc.eventManager.addListener(shuffleTouchListener, shuffle);
+
+            
             top.setContentSize(cc.size(visibleSize.width, uiTopHeight));
             bottom.setContentSize(cc.size(visibleSize.width, uiBottomHeight));
         },
@@ -277,7 +306,7 @@ var GameSceneLayer = function () {
             var size = cc.size(blockSize*columnCount, blockSize*rowCount);
             backgroundGrid.setContentSize(size);
 
-            var lineWidth = 1;
+            var lineWidth = .1;
 
             for(var row=0; row<=rowCount;row++) {
                 var lineY = uiBottomHeight+bottomMargin+row*blockSize;

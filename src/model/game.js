@@ -96,10 +96,13 @@ var PathCache = function () {
     }
 
     return cc.Class.extend({
-        pathMap:{},
-        pathKeys:{},
-        pathConnectedTo:{},
+        pathMap:null,//{},
+        pathKeys:null,//{},
+        pathConnectedTo:null,//{},
         ctor:function() {
+            this.pathMap = {};
+            this.pathKeys = {};
+            this.pathConnectedTo = {};
         },
         recordConnectedTo: function (p, path) {
             var key = positionToKey(p);
@@ -170,15 +173,18 @@ var Game = function () {
     var iconConfig;
 
     return cc.Class.extend({
-        gameTiles: [],
+        gameTiles: null,//[],
         hintCount: 3,
         shuffleCount: 3,
-        positionMap: {},
+        positionMap: null,//{},
         iconNames:[],
-        gameTileGroup:{},
+        gameTileGroup:null,//{},
         pathCache:null,
         score:0,
         ctor:function() {
+            this.gameTiles = [];
+            this.positionMap = {};
+            this.gameTileGroup = {};
             this.initGame();
         },
         initGame: function () {
