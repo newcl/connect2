@@ -317,7 +317,7 @@ var GameSceneLayer = function () {
 
                 this.scoreText.setString((this.viewScore<<0) + "");
             }
-
+            // alert(cc._renderType + "--->");
             //cc.log("shit running\n");
         },
         createBackgroudGrid: function () {
@@ -351,7 +351,9 @@ var GameSceneLayer = function () {
             var visibleSize = cc.director.getVisibleSize();
             this.leftMargin = this.rightMargin = (visibleSize.width - blockSize*columnCount)/2;
 
-            this.backgroundLayer = new cc.LayerColor(cc.color(255,255,255,255));
+            this.backgroundLayer = new cc.LayerColor();
+            this.backgroundLayer.setColor(cc.color(255,255,255,255));
+
             var backgroundGrid = this.createBackgroudGrid();
             this.backgroundLayer.addChild(backgroundGrid);
             // var particleBackground = new cc.ParticleSystem("res/effects/background.plist");
@@ -362,6 +364,7 @@ var GameSceneLayer = function () {
             this.addChild(this.hintLayer);
 
             this.tileLayer = new cc.Layer();
+            //this.tileLayer.setColor(cc.color(255,255,255,255));
             this.addChild(this.tileLayer);
 
             this.initUi();

@@ -50,7 +50,7 @@
 var blockSize = 64;
 var topMargin = 20;
 var bottomMargin = 20;
-var uiTopHeight = 60;
+var uiTopHeight = 50;
 var uiBottomHeight = 60;
 
 var rowCount = 7;
@@ -70,9 +70,10 @@ cc.game.onStart = function(){
 //    var policy = new cc.ResolutionPolicy(cc.ContainerStrategy.ORIGINAL_CONTAINER, cc.ContentStrategy.FIXED_HEIGHT);
     // cc.view.setDesignResolutionSize(1000, designHeight, policy);
 
-
+    cc.view.enableAutoFullScreen(false);
+    cc.view.resizeWithBrowserSize(false);
     cc.view.setDesignResolutionSize(1000, designHeight, cc.ResolutionPolicy.FIXED_HEIGHT);
-    cc.view.resizeWithBrowserSize(true);
+    
     cc.view.setResizeCallback(function() {
         if (gameScene) {
             // gameScene.onSizeChanged();
