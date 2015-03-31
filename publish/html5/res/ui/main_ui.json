@@ -44,10 +44,10 @@
             },
             "PreSize": {
               "X": 1.0,
-              "Y": 0.0625
+              "Y": 0.0520833321
             },
             "TopMargin": 2.00457764,
-            "BottomMargin": 897.9954,
+            "BottomMargin": 907.9954,
             "Children": [
               {
                 "IsCustomSize": true,
@@ -57,21 +57,21 @@
                 "VerticalAlignmentType": "VT_Center",
                 "Tag": 7,
                 "PrePosition": {
-                  "X": 0.986535847,
-                  "Y": 0.5544657
+                  "X": 0.992787242,
+                  "Y": 0.5053747
                 },
                 "PreSize": {
                   "X": 0.3125,
                   "Y": 0.5
                 },
-                "LeftMargin": 431.382935,
-                "RightMargin": 8.617065,
-                "TopMargin": 1.73205566,
-                "BottomMargin": 8.267944,
+                "LeftMargin": 435.38385,
+                "RightMargin": 4.61615,
+                "TopMargin": -0.2687378,
+                "BottomMargin": 0.2687378,
                 "ActionTag": 927654179,
                 "Position": {
-                  "X": 631.382935,
-                  "Y": 33.2679443
+                  "X": 635.38385,
+                  "Y": 25.2687378
                 },
                 "Scale": {
                   "ScaleX": 1.0,
@@ -88,6 +88,128 @@
                 },
                 "FrameEvent": "",
                 "Name": "score",
+                "ctype": "TextObjectData"
+              },
+              {
+                "FileData": {
+                  "Type": "Normal",
+                  "Path": "clock.png"
+                },
+                "Tag": 9,
+                "PrePosition": {
+                  "X": 0.0471735969,
+                  "Y": 0.450909436
+                },
+                "PreSize": {
+                  "X": 0.0,
+                  "Y": 0.0
+                },
+                "LeftMargin": -1.80889893,
+                "RightMargin": 577.8089,
+                "TopMargin": -4.545471,
+                "BottomMargin": -9.454529,
+                "ActionTag": -1349467956,
+                "Position": {
+                  "X": 30.1911011,
+                  "Y": 22.5454712
+                },
+                "Scale": {
+                  "ScaleX": 0.6,
+                  "ScaleY": 0.6
+                },
+                "AnchorPoint": {
+                  "ScaleX": 0.5,
+                  "ScaleY": 0.5
+                },
+                "CColor": {},
+                "Size": {
+                  "X": 64.0,
+                  "Y": 64.0
+                },
+                "FrameEvent": "",
+                "Name": "clock",
+                "ctype": "SpriteObjectData"
+              },
+              {
+                "IsCustomSize": true,
+                "FontSize": 16,
+                "LabelText": "60",
+                "HorizontalAlignmentType": "HT_Center",
+                "VerticalAlignmentType": "VT_Center",
+                "Tag": 8,
+                "PrePosition": {
+                  "X": 0.0951354951,
+                  "Y": 0.438575447
+                },
+                "PreSize": {
+                  "X": 0.09375,
+                  "Y": 1.2
+                },
+                "LeftMargin": 0.88671875,
+                "RightMargin": 579.1133,
+                "TopMargin": -1.928772,
+                "BottomMargin": -8.071228,
+                "ActionTag": -165542558,
+                "Position": {
+                  "X": 60.88672,
+                  "Y": 21.928772
+                },
+                "Scale": {
+                  "ScaleX": 1.0,
+                  "ScaleY": 1.0
+                },
+                "AnchorPoint": {
+                  "ScaleX": 1.0,
+                  "ScaleY": 0.5
+                },
+                "CColor": {},
+                "Size": {
+                  "X": 60.0,
+                  "Y": 60.0
+                },
+                "FrameEvent": "",
+                "Name": "timeLeft",
+                "ctype": "TextObjectData"
+              },
+              {
+                "IsCustomSize": true,
+                "FontSize": 20,
+                "LabelText": "x1",
+                "HorizontalAlignmentType": "HT_Center",
+                "VerticalAlignmentType": "VT_Center",
+                "Tag": 10,
+                "PrePosition": {
+                  "X": 0.173231035,
+                  "Y": 0.450504154
+                },
+                "PreSize": {
+                  "X": 0.09375,
+                  "Y": 1.2
+                },
+                "LeftMargin": 50.86786,
+                "RightMargin": 529.132141,
+                "TopMargin": -2.52520752,
+                "BottomMargin": -7.47479248,
+                "ActionTag": 125423202,
+                "Position": {
+                  "X": 110.867859,
+                  "Y": 22.5252075
+                },
+                "Scale": {
+                  "ScaleX": 1.0,
+                  "ScaleY": 1.0
+                },
+                "AnchorPoint": {
+                  "ScaleX": 1.0,
+                  "ScaleY": 0.5
+                },
+                "CColor": {},
+                "Size": {
+                  "X": 60.0,
+                  "Y": 60.0
+                },
+                "FrameEvent": "",
+                "Name": "combo",
                 "ctype": "TextObjectData"
               }
             ],
@@ -106,19 +228,17 @@
             "CColor": {},
             "Size": {
               "X": 640.0,
-              "Y": 60.0
+              "Y": 50.0
             },
             "FrameEvent": "",
             "Name": "top",
             "ctype": "PanelObjectData"
           },
           {
-            "BackColorAlpha": 102,
             "ComboBoxIndex": 1,
             "SingleColor": {
-              "R": 45,
-              "G": 45,
-              "B": 171
+              "R": 150,
+              "G": 200
             },
             "FirstColor": {
               "R": 150,
@@ -151,40 +271,40 @@
                 },
                 "DisabledFileData": {
                   "Type": "Normal",
-                  "Path": "slice153_3.png"
+                  "Path": "buttons/slice108_@.png"
                 },
                 "PressedFileData": {
                   "Type": "Normal",
-                  "Path": "slice152_2.png"
+                  "Path": "buttons/slice106_@.png"
                 },
                 "NormalFileData": {
                   "Type": "Normal",
-                  "Path": "slice150_0.png"
+                  "Path": "buttons/slice104_@.png"
                 },
-                "Scale9Width": 171,
-                "Scale9Height": 173,
+                "Scale9Width": 52,
+                "Scale9Height": 52,
                 "TouchEnable": true,
                 "Tag": 8,
                 "PrePosition": {
-                  "X": 0.0923643559,
-                  "Y": 0.503287256
+                  "X": 0.07673949,
+                  "Y": 0.5032866
                 },
                 "PreSize": {
-                  "X": 0.2672,
-                  "Y": 2.1625
+                  "X": 0.08125,
+                  "Y": 0.8666667
                 },
-                "LeftMargin": -26.38681,
-                "RightMargin": 495.3868,
-                "TopMargin": -56.6972351,
-                "BottomMargin": -56.3027649,
+                "LeftMargin": 23.1132736,
+                "RightMargin": 564.8867,
+                "TopMargin": 3.802803,
+                "BottomMargin": 4.197197,
                 "ActionTag": 850254998,
                 "Position": {
-                  "X": 59.11319,
-                  "Y": 30.1972351
+                  "X": 49.1132736,
+                  "Y": 30.197197
                 },
                 "Scale": {
-                  "ScaleX": 0.35,
-                  "ScaleY": 0.35
+                  "ScaleX": 1.0,
+                  "ScaleY": 1.0
                 },
                 "AnchorPoint": {
                   "ScaleX": 0.5,
@@ -192,8 +312,8 @@
                 },
                 "CColor": {},
                 "Size": {
-                  "X": 171.0,
-                  "Y": 173.0
+                  "X": 52.0,
+                  "Y": 52.0
                 },
                 "FrameEvent": "",
                 "Name": "shuffle",
@@ -209,40 +329,40 @@
                 },
                 "DisabledFileData": {
                   "Type": "Normal",
-                  "Path": "slice25_25.png"
+                  "Path": "buttons/slice60_60.png"
                 },
                 "PressedFileData": {
                   "Type": "Normal",
-                  "Path": "slice24_24.png"
+                  "Path": "buttons/slice58_58.png"
                 },
                 "NormalFileData": {
                   "Type": "Normal",
-                  "Path": "slice22_22.png"
+                  "Path": "buttons/slice56_56.png"
                 },
-                "Scale9Width": 171,
-                "Scale9Height": 173,
+                "Scale9Width": 52,
+                "Scale9Height": 53,
                 "TouchEnable": true,
                 "Tag": 9,
                 "PrePosition": {
-                  "X": 0.236122176,
-                  "Y": 0.520001233
+                  "X": 0.181435272,
+                  "Y": 0.520011246
                 },
                 "PreSize": {
-                  "X": 0.2672,
-                  "Y": 2.1625
+                  "X": 0.08125,
+                  "Y": 0.8833333
                 },
-                "LeftMargin": 65.6181946,
-                "RightMargin": 403.3818,
-                "TopMargin": -57.7000732,
-                "BottomMargin": -55.2999268,
+                "LeftMargin": 90.118576,
+                "RightMargin": 497.8814,
+                "TopMargin": 2.299324,
+                "BottomMargin": 4.700676,
                 "ActionTag": 995465500,
                 "Position": {
-                  "X": 151.1182,
-                  "Y": 31.2000732
+                  "X": 116.118576,
+                  "Y": 31.200676
                 },
                 "Scale": {
-                  "ScaleX": 0.35,
-                  "ScaleY": 0.35
+                  "ScaleX": 1.0,
+                  "ScaleY": 1.0
                 },
                 "AnchorPoint": {
                   "ScaleX": 0.5,
@@ -250,8 +370,8 @@
                 },
                 "CColor": {},
                 "Size": {
-                  "X": 171.0,
-                  "Y": 173.0
+                  "X": 52.0,
+                  "Y": 53.0
                 },
                 "FrameEvent": "",
                 "Name": "hint",

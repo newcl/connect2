@@ -53,8 +53,8 @@ var bottomMargin = 20;
 var uiTopHeight = 50;
 var uiBottomHeight = 60;
 
-var rowCount = 7;
-var columnCount = 5;
+var rowCount = 8;
+var columnCount = 6;
 var designHeight = uiTopHeight + topMargin + blockSize * rowCount + bottomMargin + uiBottomHeight;
 
 cc.game.onStart = function(){

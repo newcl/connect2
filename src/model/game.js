@@ -423,7 +423,9 @@ var Game = function () {
             var iconNames = iconConfig.getIconNames();
             var iconName = iconNames[(iconNames.length*Math.random())<<0];
 
-            var pair = rowCount*columnCount/2<<0;
+            var max = rowCount*columnCount/2<<0;
+            var min = 4;
+            var pair = min + Math.random()*(max-min+1)<<0;
             // var typeCount = Math.min(5, iconConfig.getConfig()[iconName]);
             var count = iconConfig.getConfig()[iconName];
             for(var i=0; i < pair;i++) {
@@ -433,7 +435,7 @@ var Game = function () {
 
                 // var key = all_icons[(Math.random()*all_icons.length) << 0];
                 var index = (Math.random()*count) << 0;
-                index = 0;
+                // index = 0;
 
                 var key = "res/icons/"+iconName+"/"+iconName+"-"+index+".png";
                 this.addGameTileForKey(key);

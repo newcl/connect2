@@ -5,7 +5,7 @@
 
 
 
-var COMBO_INTERVAL = 3000;
+
 
 function randomColor() {
     return cc.color(Math.random()*256 << 0, Math.random()*256 <<0, Math.random()*256 <<0, 255);
@@ -17,6 +17,11 @@ var GameSceneLayer = function () {
 
     var TAG_TINT_FOR_SELECTION = 10001;
     var TAG_SHAKE = 10002;
+
+    var COMBO_INTERVAL = 3000;
+    var CLOCK_SHAKING_THRESHOLD = 10000;
+
+    var TAG_SHAKE_CLOCK = 10000;
 
     function randomAngle(base, offset) {
         return base + Math.random()*offset;
@@ -37,6 +42,7 @@ var GameSceneLayer = function () {
         scoreText:null,
         timeLeftText:null,
         comboText:null,
+        clock:null,
         backgroundLayer:null,
         hintLayer:null,
         leftMargin:60,
@@ -45,6 +51,7 @@ var GameSceneLayer = function () {
         bottomMargin:60,
         horizontalInterval:undefined,
         verticalInterval:undefined,
+        clockTickEffectId:0,
         lastConnectTime:0,
         shake: function (gameTileView, time,angle, deltaAngle,count) {
             var time = time || 0.1;
@@ -107,6 +114,9 @@ var GameSceneLayer = function () {
             this.bind(game);
             this.viewScore = 0;
             this.scoreText.setString(this.viewScore+"");
+            this.tryStopShakingClock();
+
+            // cc.audioEngine.stopAllEffects();
             //this.backgroundLayer.removeAllChildren();
 
         },
@@ -166,7 +176,7 @@ var GameSceneLayer = function () {
             var path = this.game.connect(this.selectedGameTileView.gameTile.position, newSelected.gameTile.position);
 
             if (this.game.isEmpty()) {
-                cc.audioEngine.playEffect("res/sound/clear.wav",false);
+                // cc.audioEngine.playEffect("res/sound/clear.wav",false);
             } else {
                 if (newSelected.gameTile.key.indexOf("cat") > -1) {
                     cc.audioEngine.playEffect("res/sound/cat"+((Math.random()*4)<<0)+".wav",false);
@@ -210,6 +220,7 @@ var GameSceneLayer = function () {
             this.selectedGameTileView = null;
 
             if(this.game.isEmpty()) {
+                cc.audioEngine.playEffect("res/sound/level_clear.wav",false);
                 this.reset();
             } else {
                 if (this.game.hasValidPath()) {
@@ -232,7 +243,7 @@ var GameSceneLayer = function () {
                 var head = path.head();
                 var tail = path.tail();
 
-                var duration = 0.2;
+                var duration = 0.1;
                 var sequence = cc.sequence(cc.scaleTo(duration, 1.3), cc.scaleTo(duration, 1.0));
                 var sequence2 = cc.sequence(cc.scaleTo(duration, 1.3), cc.scaleTo(duration, 1.0));
                 var headTileView = this.tileLayer.getChildByName(positionToKey(head.x, head.y));
@@ -252,6 +263,9 @@ var GameSceneLayer = function () {
                         } else {
                             cc.audioEngine.playEffect("res/sound/connect_fail.wav");
 
+                            this.game.combo = 0;
+                            this.lastConnectTime = 0;
+
                             this.stopTintSelectedGameTileView(this.selectedGameTileView);
 
                             this.shake(newSelected);
@@ -270,6 +284,8 @@ var GameSceneLayer = function () {
                 this.selectedGameTileView = newSelected;
                 this.tryTintSelectedGameTileView(this.selectedGameTileView);
             }
+
+            cc.audioEngine.playEffect("res/sound/select.wav");
         },
         createGameTileView: function (gameTile) {
             var position = this.getPositionInGame(gameTile.position);
@@ -315,6 +331,8 @@ var GameSceneLayer = function () {
             scoreText.setPositionX(visibleSize.width -10);
             this.scoreText = scoreText;
 
+            this.clock = top.getChildByName("clock");
+
             this.timeLeftText = top.getChildByName("timeLeft");
             this.comboText = top.getChildByName("combo");
 
@@ -324,6 +342,8 @@ var GameSceneLayer = function () {
             shuffle.addTouchEventListener(function(sender, type){
                 switch (type) {
                     case ccui.Widget.TOUCH_BEGAN:
+
+                        cc.audioEngine.playEffect("res/sound/shuffle.wav",false);
                         this.doShuffle();
                         break;
 
@@ -348,6 +368,7 @@ var GameSceneLayer = function () {
             hint.addTouchEventListener(function(sender, type){
                 switch (type) {
                     case ccui.Widget.TOUCH_BEGAN:
+                        cc.audioEngine.playEffect("res/sound/hint.wav",false);
                         this.doHint();
                         break;
 
@@ -374,44 +395,75 @@ var GameSceneLayer = function () {
             top.setContentSize(cc.size(visibleSize.width, uiTopHeight));
             bottom.setContentSize(cc.size(visibleSize.width, uiBottomHeight));
         },
+        tryShakeClock:function () {
+            if (this.clock.getActionByTag(TAG_SHAKE_CLOCK) == null) {
+                this.clockTickEffectId = cc.audioEngine.playEffect("res/sound/tick.wav",true);
+
+                var angle = 25;
+                var deltaAngle = 11;
+                var time = 0.06;
+                var  sequence = cc.sequence(generateRotateAction(time, -1, angle, deltaAngle),
+                                         generateRotateAction(time, 1, angle, deltaAngle));
+                var shakeForEver = cc.repeatForever(sequence);
+                shakeForEver.setTag(TAG_SHAKE_CLOCK);
+                this.clock.runAction(shakeForEver);
+            }
+        },
+        tryStopShakingClock:function () {
+            this.clock.setRotation(0);
+            cc.audioEngine.stopEffect(this.clockTickEffectId);
+            this.clock.stopActionByTag(TAG_SHAKE_CLOCK);
+        },
         update:function (dt) {
             this._super(dt);
-            if (this.viewScore != this.game.score) {
-                var delta = this.game.score - this.viewScore;
-                if (delta <= 2) {
-                    this.viewScore = this.game.score;
-                } else {
-                    this.viewScore += delta/2;
-                }
-
-                this.scoreText.setString((this.viewScore<<0) + "");
-            }
-
+            
             this.game.time -= dt*1000;
             this.game.time = Math.max(this.game.time, 0) << 0;
             if (this.game.time <= 0) {
-
-            }
-
-            //combo
-            var now = new Date().getTime();
-            if (now - this.lastConnectTime <= COMBO_INTERVAL) {
+                cc.audioEngine.playEffect("res/sound/level_fail.wav",false);
+                this.reset();
 
             } else {
-                this.game.combo = 0;
+                if (this.viewScore != this.game.score) {
+                    var delta = this.game.score - this.viewScore;
+                    if (delta <= 2) {
+                        this.viewScore = this.game.score;
+                    } else {
+                        this.viewScore += delta/2;
+                    }
+
+                    this.scoreText.setString((this.viewScore<<0) + "");
+                }
+
+                if (this.game.time < CLOCK_SHAKING_THRESHOLD) {
+                    this.tryShakeClock();
+                }
+
+                //combo
+                var now = new Date().getTime();
+                if (now - this.lastConnectTime <= COMBO_INTERVAL) {
+
+                } else {
+                    this.game.combo = 0;
+                }
+
+                if (this.game.combo <= 0) {
+                    var sequence = cc.sequence(cc.scaleTo(0.1, 0.1), cc.hide());
+                    this.comboText.runAction(sequence);
+                    // console.log("hiding");
+                } else {
+                    this.comboText.setVisible(true);    
+                }    
+
+                this.timeLeftText.setString(((this.game.time/1000)<<0)+"");
             }
 
-            if (this.game.combo <= 0) {
-                var sequence = cc.sequence(cc.scaleTo(0.1, 0.1), cc.hide());
-                this.comboText.runAction(sequence);
-                // console.log("hiding");
-            } else {
-                this.comboText.setVisible(true);    
-            }
+            
+
 
             // this.comboText.setVisible();
 
-            this.timeLeftText.setString(((this.game.time/1000)<<0)+"");
+            
             // alert(cc._renderType + "--->");
             //cc.log("shit running\n");
         },
