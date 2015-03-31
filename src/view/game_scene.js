@@ -5,7 +5,7 @@
 
 
 
-
+var COMBO_INTERVAL = 3000;
 
 function randomColor() {
     return cc.color(Math.random()*256 << 0, Math.random()*256 <<0, Math.random()*256 <<0, 255);
@@ -35,6 +35,8 @@ var GameSceneLayer = function () {
         tileLayer:null,
         uiLayer:null,
         scoreText:null,
+        timeLeftText:null,
+        comboText:null,
         backgroundLayer:null,
         hintLayer:null,
         leftMargin:60,
@@ -43,6 +45,7 @@ var GameSceneLayer = function () {
         bottomMargin:60,
         horizontalInterval:undefined,
         verticalInterval:undefined,
+        lastConnectTime:0,
         shake: function (gameTileView, time,angle, deltaAngle,count) {
             var time = time || 0.1;
             var angle = angle || 25;
@@ -175,6 +178,30 @@ var GameSceneLayer = function () {
                 this.game.score += 200;
             }
 
+            var now = new Date().getTime();
+            var interval = now - this.lastConnectTime;
+            
+            if (interval <= COMBO_INTERVAL) {
+                if (this.game.combo == 0) {
+                    this.comboText.setScale(1.0);
+                    // this.comboText.setVisible(true); 
+                    this.comboText.runAction(cc.show());
+                }
+                this.game.combo += 1;
+                this.comboText.setString("x"+(this.game.combo <<0) + "");
+
+                var sequence = cc.sequence(cc.scaleTo(0.1, 1.4), cc.scaleTo(0.1, 1.0));
+                this.comboText.runAction(sequence);
+
+                var comboEffectIndex = this.game.combo + 1;
+                comboEffectIndex = Math.min(7, comboEffectIndex);
+                cc.audioEngine.playEffect("res/sound/combo"+comboEffectIndex+".wav", false);
+                //combo extra score
+                var comboCount = this.game.combo;
+                this.game.score += comboCount*comboCount*100;
+            }
+            this.lastConnectTime = now;
+
             this.cleanupForGameTileView(this.selectedGameTileView);
             this.cleanupForGameTileView(newSelected);
 
@@ -198,6 +225,21 @@ var GameSceneLayer = function () {
             } while(!this.game.hasValidPath());
 
             this.onGameShuffled();
+        },
+        doHint:function () {
+            var path = this.game.getHintPath();
+            if (path != null) {
+                var head = path.head();
+                var tail = path.tail();
+
+                var duration = 0.2;
+                var sequence = cc.sequence(cc.scaleTo(duration, 1.3), cc.scaleTo(duration, 1.0));
+                var sequence2 = cc.sequence(cc.scaleTo(duration, 1.3), cc.scaleTo(duration, 1.0));
+                var headTileView = this.tileLayer.getChildByName(positionToKey(head.x, head.y));
+                var tailTileView = this.tileLayer.getChildByName(positionToKey(tail.x, tail.y));
+                headTileView.runAction(sequence);
+                tailTileView.runAction(sequence2);
+            }
         },
         onGameTileViewSelected: function (newSelected) {
             if(this.selectedGameTileView){
@@ -250,8 +292,9 @@ var GameSceneLayer = function () {
             }(gameTileView, this);
 
             gameTileView.listener = cc.eventManager.addListener(touchListener, gameTileView);
-
             this.tileLayer.addChild(gameTileView);
+            gameTileView.setName(positionToKey(gameTile.position.x, gameTile.position.y));
+            
         },
         createGameTileViews: function (game) {
             game.gameTiles.forEach(function (gameTile) {
@@ -271,6 +314,10 @@ var GameSceneLayer = function () {
             var scoreText = top.getChildByName("score");
             scoreText.setPositionX(visibleSize.width -10);
             this.scoreText = scoreText;
+
+            this.timeLeftText = top.getChildByName("timeLeft");
+            this.comboText = top.getChildByName("combo");
+
 
             var bottom = this.uiLayer.getChildByName("bottom");
             var shuffle = bottom.getChildByName("shuffle");
@@ -297,7 +344,29 @@ var GameSceneLayer = function () {
                 }
             },this);
 
+            var hint = bottom.getChildByName("hint");
+            hint.addTouchEventListener(function(sender, type){
+                switch (type) {
+                    case ccui.Widget.TOUCH_BEGAN:
+                        this.doHint();
+                        break;
 
+                    case ccui.Widget.TOUCH_MOVED:
+                        //this._topDisplayText.setString("Touch Move");
+                        break;
+
+                    case ccui.Widget.TOUCH_ENDED:
+                        //this._topDisplayText.setString("Touch Up");
+                        break;
+
+                    case ccui.Widget.TOUCH_CANCELED:
+                        //this._topDisplayText.setString("Touch Cancelled");
+                        break;
+
+                    default:
+                        break;
+                }
+            },this);
 
             //cc.eventManager.addListener(shuffleTouchListener, shuffle);
 
@@ -317,6 +386,32 @@ var GameSceneLayer = function () {
 
                 this.scoreText.setString((this.viewScore<<0) + "");
             }
+
+            this.game.time -= dt*1000;
+            this.game.time = Math.max(this.game.time, 0) << 0;
+            if (this.game.time <= 0) {
+
+            }
+
+            //combo
+            var now = new Date().getTime();
+            if (now - this.lastConnectTime <= COMBO_INTERVAL) {
+
+            } else {
+                this.game.combo = 0;
+            }
+
+            if (this.game.combo <= 0) {
+                var sequence = cc.sequence(cc.scaleTo(0.1, 0.1), cc.hide());
+                this.comboText.runAction(sequence);
+                // console.log("hiding");
+            } else {
+                this.comboText.setVisible(true);    
+            }
+
+            // this.comboText.setVisible();
+
+            this.timeLeftText.setString(((this.game.time/1000)<<0)+"");
             // alert(cc._renderType + "--->");
             //cc.log("shit running\n");
         },

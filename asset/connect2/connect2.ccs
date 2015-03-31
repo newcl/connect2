@@ -4,6 +4,15 @@
     <Group ctype="ResourceGroup">
       <RootFolder Name=".">
         <Project Name="main_ui.csd" Type="Scene" />
+        <Folder Name="buttons">
+          <Image Name="slice104_@.png" />
+          <Image Name="slice108_@.png" />
+          <Image Name="slice106_@.png" />
+          <Image Name="slice56_56.png" />
+          <Image Name="slice58_58.png" />
+          <Image Name="slice60_60.png" />
+        </Folder>
+        <Image Name="clock.png" />
       </RootFolder>
     </Group>
   </SolutionFolder>

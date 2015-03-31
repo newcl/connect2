@@ -168,6 +168,15 @@ var PathCache = function () {
             } else {
                 return null;
             }
+        },
+        getHintPath:function () {
+            var keys = Object.keys(this.pathKeys);
+            if (keys.length > 0) {
+                var key = keys[0];
+                return this.pathMap[key][0];
+            } else {
+                return null;
+            }
         }
     });
 }();
@@ -184,10 +193,13 @@ var Game = function () {
         gameTileGroup:null,//{},
         pathCache:null,
         score:0,
+        time:0,//in milliseconds = time in seconds * 1000
+        combo:0,
         ctor:function() {
             this.gameTiles = [];
             this.positionMap = {};
             this.gameTileGroup = {};
+            this.time = 60000;
             this.initGame();
         },
         initGame: function () {
@@ -411,7 +423,7 @@ var Game = function () {
             var iconNames = iconConfig.getIconNames();
             var iconName = iconNames[(iconNames.length*Math.random())<<0];
 
-            var pair = 6;
+            var pair = rowCount*columnCount/2<<0;
             // var typeCount = Math.min(5, iconConfig.getConfig()[iconName]);
             var count = iconConfig.getConfig()[iconName];
             for(var i=0; i < pair;i++) {
@@ -421,6 +433,7 @@ var Game = function () {
 
                 // var key = all_icons[(Math.random()*all_icons.length) << 0];
                 var index = (Math.random()*count) << 0;
+                index = 0;
 
                 var key = "res/icons/"+iconName+"/"+iconName+"-"+index+".png";
                 this.addGameTileForKey(key);
@@ -459,6 +472,9 @@ var Game = function () {
         getPathConnectedTo: function (position) {
             var paths = this.pathCache.getPathConnectedTo(position);
             return paths;
+        },
+        getHintPath:function () {
+            return this.pathCache.getHintPath();
         }
     });
 }();

@@ -89,6 +89,128 @@
                 "FrameEvent": "",
                 "Name": "score",
                 "ctype": "TextObjectData"
+              },
+              {
+                "FileData": {
+                  "Type": "Normal",
+                  "Path": "clock.png"
+                },
+                "Tag": 9,
+                "PrePosition": {
+                  "X": 0.0471735969,
+                  "Y": 0.450909436
+                },
+                "PreSize": {
+                  "X": 0.0,
+                  "Y": 0.0
+                },
+                "LeftMargin": -1.80889893,
+                "RightMargin": 577.8089,
+                "TopMargin": -4.545471,
+                "BottomMargin": -9.454529,
+                "ActionTag": -1349467956,
+                "Position": {
+                  "X": 30.1911011,
+                  "Y": 22.5454712
+                },
+                "Scale": {
+                  "ScaleX": 0.6,
+                  "ScaleY": 0.6
+                },
+                "AnchorPoint": {
+                  "ScaleX": 0.5,
+                  "ScaleY": 0.5
+                },
+                "CColor": {},
+                "Size": {
+                  "X": 64.0,
+                  "Y": 64.0
+                },
+                "FrameEvent": "",
+                "Name": "clock",
+                "ctype": "SpriteObjectData"
+              },
+              {
+                "IsCustomSize": true,
+                "FontSize": 16,
+                "LabelText": "60",
+                "HorizontalAlignmentType": "HT_Center",
+                "VerticalAlignmentType": "VT_Center",
+                "Tag": 8,
+                "PrePosition": {
+                  "X": 0.0951354951,
+                  "Y": 0.438575447
+                },
+                "PreSize": {
+                  "X": 0.09375,
+                  "Y": 1.2
+                },
+                "LeftMargin": 0.88671875,
+                "RightMargin": 579.1133,
+                "TopMargin": -1.928772,
+                "BottomMargin": -8.071228,
+                "ActionTag": -165542558,
+                "Position": {
+                  "X": 60.88672,
+                  "Y": 21.928772
+                },
+                "Scale": {
+                  "ScaleX": 1.0,
+                  "ScaleY": 1.0
+                },
+                "AnchorPoint": {
+                  "ScaleX": 1.0,
+                  "ScaleY": 0.5
+                },
+                "CColor": {},
+                "Size": {
+                  "X": 60.0,
+                  "Y": 60.0
+                },
+                "FrameEvent": "",
+                "Name": "timeLeft",
+                "ctype": "TextObjectData"
+              },
+              {
+                "IsCustomSize": true,
+                "FontSize": 20,
+                "LabelText": "x1",
+                "HorizontalAlignmentType": "HT_Center",
+                "VerticalAlignmentType": "VT_Center",
+                "Tag": 10,
+                "PrePosition": {
+                  "X": 0.173231035,
+                  "Y": 0.450504154
+                },
+                "PreSize": {
+                  "X": 0.09375,
+                  "Y": 1.2
+                },
+                "LeftMargin": 50.86786,
+                "RightMargin": 529.132141,
+                "TopMargin": -2.52520752,
+                "BottomMargin": -7.47479248,
+                "ActionTag": 125423202,
+                "Position": {
+                  "X": 110.867859,
+                  "Y": 22.5252075
+                },
+                "Scale": {
+                  "ScaleX": 1.0,
+                  "ScaleY": 1.0
+                },
+                "AnchorPoint": {
+                  "ScaleX": 1.0,
+                  "ScaleY": 0.5
+                },
+                "CColor": {},
+                "Size": {
+                  "X": 60.0,
+                  "Y": 60.0
+                },
+                "FrameEvent": "",
+                "Name": "combo",
+                "ctype": "TextObjectData"
               }
             ],
             "ActionTag": -817663647,

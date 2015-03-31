@@ -30,6 +30,34 @@
                 <PrePosition X="0.9928" Y="0.5054" />
                 <PreSize X="0.3125" Y="0.5000" />
               </NodeObjectData>
+              <NodeObjectData Name="clock" ActionTag="-1349467956" FrameEvent="" Tag="9" LeftMargin="-1.8089" RightMargin="577.8089" TopMargin="-4.5455" BottomMargin="-9.4545" ctype="SpriteObjectData">
+                <Position X="30.1911" Y="22.5455" />
+                <Scale ScaleX="0.6000" ScaleY="0.6000" />
+                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <Size X="64.0000" Y="64.0000" />
+                <PrePosition X="0.0472" Y="0.4509" />
+                <PreSize X="0.0000" Y="0.0000" />
+                <FileData Type="Normal" Path="clock.png" />
+              </NodeObjectData>
+              <NodeObjectData Name="timeLeft" ActionTag="-165542558" FrameEvent="" Tag="8" LeftMargin="0.8867" RightMargin="579.1133" TopMargin="-1.9288" BottomMargin="-8.0712" IsCustomSize="True" FontSize="16" LabelText="60" HorizontalAlignmentType="HT_Center" VerticalAlignmentType="VT_Center" ctype="TextObjectData">
+                <Position X="60.8867" Y="21.9288" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <AnchorPoint ScaleX="1.0000" ScaleY="0.5000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <Size X="60.0000" Y="60.0000" />
+                <PrePosition X="0.0951" Y="0.4386" />
+                <PreSize X="0.0938" Y="1.2000" />
+              </NodeObjectData>
+              <NodeObjectData Name="combo" ActionTag="125423202" FrameEvent="" Tag="10" LeftMargin="50.8679" RightMargin="529.1321" TopMargin="-2.5252" BottomMargin="-7.4748" IsCustomSize="True" FontSize="20" LabelText="x1" HorizontalAlignmentType="HT_Center" VerticalAlignmentType="VT_Center" ctype="TextObjectData">
+                <Position X="110.8679" Y="22.5252" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <AnchorPoint ScaleX="1.0000" ScaleY="0.5000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <Size X="60.0000" Y="60.0000" />
+                <PrePosition X="0.1732" Y="0.4505" />
+                <PreSize X="0.0938" Y="1.2000" />
+              </NodeObjectData>
             </Children>
             <SingleColor A="255" R="150" G="200" B="255" />
             <FirstColor A="255" R="150" G="200" B="255" />
