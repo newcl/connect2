@@ -1,6 +1,12 @@
 # connect2
 Connect all the matching tiles! 
 
+<div>
+  <img src="asset/screenshot/gameplay.png" alt="main menu screen shot" width="184" height="158">
+</div>
+
+<br>
+
 This is a sample game project to try out using javascript as the development language for the famous coco2dx engine.
 
 I also have a C++ implementation <a href="github.com/newcl/connect">HERE</a>.
