@@ -47,14 +47,14 @@
  *
  */
 
-var blockSize = 64;
+var blockSize = 50;
 var topMargin = 20;
 var bottomMargin = 20;
 var uiTopHeight = 50;
 var uiBottomHeight = 60;
 
-var rowCount = 8;
-var columnCount = 6;
+var rowCount = 7;
+var columnCount = 5;
 var designHeight = uiTopHeight + topMargin + blockSize * rowCount + bottomMargin + uiBottomHeight;
 
 cc.game.onStart = function(){
